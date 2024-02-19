@@ -1,6 +1,6 @@
 import { UUID } from "crypto"
 
-type User = {
+export type TUser = {
     id: UUID
     username: string,
     password: string,
