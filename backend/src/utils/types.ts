@@ -1,7 +1,7 @@
 import { UUID } from "crypto"
 
 export type TUser = {
-    id: UUID
+    id: string,
     username: string,
     password: string,
     createdAt: string,

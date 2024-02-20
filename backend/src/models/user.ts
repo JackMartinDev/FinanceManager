@@ -3,7 +3,7 @@ import { pool as db } from "../database/db";
 import { TUser } from "../utils/types";
 
 export default class User {
-    constructor(public user:TUser, public id?: UUID){}
+    constructor(public user:TUser, public id?: string){}
 
     async create() {
         try {
@@ -32,7 +32,7 @@ export default class User {
         }
     }
 
-    static async fetchById(id: UUID): Promise<User | undefined>{
+    static async fetchById(id: string): Promise<User | undefined>{
         try{
             const user = await db.query("SELECT * FROM user where id = $1", [id]);
             if (user.rowCount === 0) {
@@ -45,7 +45,7 @@ export default class User {
         }
     }
 
-    static async deleteById(id:UUID) {
+    static async deleteById(id:string) {
         try {
             const deleteUser = await db.query("DELETE FROM users WHERE id = $1",[id]);
             return !!deleteUser.rowCount;
