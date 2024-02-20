@@ -2,21 +2,25 @@
 //DB errors, validation errors etc.
 
 export class NotFoundError {
-    message:string;
+    error:string;
     status:number;
+    message:string;
 
-    constructor(message:string) {
-        this.message = message;
+    constructor(message:string = "Page or resource could not be found") {
+        this.error = "NotFoundError"
         this.status = 404;
+        this.message = message;
     }
 }
 
 export class NotAuthError {
-    message:string;
+    error:string;
     status:number;
+    message:string;
 
     constructor(message:string = "Not authenticated") {
-        this.message = message;
+        this.error = "NotAuthError";
         this.status = 401;
+        this.message = message;
     }
 }
