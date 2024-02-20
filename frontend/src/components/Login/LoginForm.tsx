@@ -12,6 +12,7 @@ import {
     Checkbox,
     Anchor,
     Stack,
+    Center,
 } from '@mantine/core';
 import GoogleButton from '../buttons/GoogleButton';
 import TwitterButton from '../buttons/TwitterButton';
@@ -33,71 +34,73 @@ const LoginForm = (props: PaperProps) => {
     });
 
     return (
-        <Paper radius="md" p="xl" withBorder {...props}>
-            <Text size="lg" fw={500}>
-                Welcome to Mantine, {type} with
-            </Text>
+        <Center>
+            <Paper radius="md" p="xl" w={450} mt={200} withBorder {...props}>
+                <Text size="lg" fw={500}>
+                    Welcome to Mantine, {type} with
+                </Text>
 
-            <Group grow mb="md" mt="md">
-                <GoogleButton radius="xl">Google</GoogleButton>
-                <TwitterButton radius="xl">Twitter</TwitterButton>
-            </Group>
+                <Group grow mb="md" mt="md">
+                    <GoogleButton radius="xl">Google</GoogleButton>
+                    <TwitterButton radius="xl">Twitter</TwitterButton>
+                </Group>
 
-            <Divider label="Or continue with email" labelPosition="center" my="lg" />
+                <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-            <form onSubmit={form.onSubmit(() => {})}>
-                <Stack>
-                    {type === 'register' && (
+                <form onSubmit={form.onSubmit(() => {})}>
+                    <Stack>
+                        {type === 'register' && (
+                            <TextInput
+                                label="Name"
+                                placeholder="Your name"
+                                value={form.values.name}
+                                onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                                radius="md"
+                            />
+                        )}
+
                         <TextInput
-                            label="Name"
-                            placeholder="Your name"
-                            value={form.values.name}
-                            onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                            required
+                            label="Email"
+                            placeholder="hello@mantine.dev"
+                            value={form.values.email}
+                            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                            error={form.errors.email && 'Invalid email'}
                             radius="md"
                         />
-                    )}
 
-                    <TextInput
-                        required
-                        label="Email"
-                        placeholder="hello@mantine.dev"
-                        value={form.values.email}
-                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                        error={form.errors.email && 'Invalid email'}
-                        radius="md"
-                    />
-
-                    <PasswordInput
-                        required
-                        label="Password"
-                        placeholder="Your password"
-                        value={form.values.password}
-                        onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                        error={form.errors.password && 'Password should include at least 6 characters'}
-                        radius="md"
-                    />
-
-                    {type === 'register' && (
-                        <Checkbox
-                            label="I accept terms and conditions"
-                            checked={form.values.terms}
-                            onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+                        <PasswordInput
+                            required
+                            label="Password"
+                            placeholder="Your password"
+                            value={form.values.password}
+                            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                            error={form.errors.password && 'Password should include at least 6 characters'}
+                            radius="md"
                         />
-                    )}
-                </Stack>
 
-                <Group justify="space-between" mt="xl">
-                    <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
-                        {type === 'register'
-                            ? 'Already have an account? Login'
-                            : "Don't have an account? Register"}
-                    </Anchor>
-                    <Button type="submit" radius="xl">
-                        {upperFirst(type)}
-                    </Button>
-                </Group>
-            </form>
-        </Paper>
+                        {type === 'register' && (
+                            <Checkbox
+                                label="I accept terms and conditions"
+                                checked={form.values.terms}
+                                onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+                            />
+                        )}
+                    </Stack>
+
+                    <Group justify="space-between" mt="xl">
+                        <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
+                            {type === 'register'
+                                ? 'Already have an account? Login'
+                                : "Don't have an account? Register"}
+                        </Anchor>
+                        <Button type="submit" radius="xl">
+                            {upperFirst(type)}
+                        </Button>
+                    </Group>
+                </form>
+            </Paper>
+        </Center>
     );
 }
 
