@@ -3,6 +3,7 @@ import User from "../models/user"
 import { ValidateUser } from "../utils/auth";
 
 export const authLogin = async(req: Request, res: Response) => {
+    //TODO: Add username, password validation
     const {username, password} = req.body; 
     if(!username || !password) {
         return res.status(400).json({error: "Username or password not present"});

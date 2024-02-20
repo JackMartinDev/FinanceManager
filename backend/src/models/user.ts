@@ -1,4 +1,3 @@
-import { UUID } from "crypto";
 import { pool as db } from "../database/db";
 import { TUser } from "../utils/types";
 
