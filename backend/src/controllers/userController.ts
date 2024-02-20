@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import User from "../models/user";
 import { TUser } from "../utils/types";
+import { Hash } from "../utils/auth";
 
 export const getUsers = async(_: Request, res: Response) => {
     try {
@@ -28,7 +29,11 @@ export const getUser = async(req: Request, res: Response) =>{
 export const createUser = async(req: Request<{}, {}, TUser>, res:Response) => {
     try {
         //Add some validation here
-        const user = new User(req.body);
+        const username = req.body.username;
+        const password = await Hash(10,req.body.password);
+        const id = crypto.randomUUID();
+
+        const user = new User({id, username, password});
         user.create();
         res.status(200).json({message: "User created successfully"})
     } catch (error) {
