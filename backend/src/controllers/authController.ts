@@ -3,8 +3,7 @@ import User from "../models/user"
 import { ValidateUser } from "../utils/auth";
 import jwt from "jsonwebtoken";
 
-//TODO: Change jwtSecret to .env variable
-const jwtSecret = '05e2df71cf738219837d258b897d309fb759f908c37dc40f80727513cc8edc0488fd48';
+const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
 
 //TODO: Add message field to errors
 

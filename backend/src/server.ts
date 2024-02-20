@@ -1,15 +1,17 @@
 import express, { Application } from 'express';
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
 import userRoutes from "./routes/users"
 import authRoutes from "./routes/auth"
 import { checkAuthMiddleware } from './utils/auth';
 
 const app:Application = express();
+dotenv.config();
 
 //TODO Add .env file
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());

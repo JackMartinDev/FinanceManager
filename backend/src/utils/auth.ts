@@ -2,6 +2,8 @@ import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import jwt, { VerifyErrors } from "jsonwebtoken";
 
+const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
+
 const Hash = async(saltRounds: number, password: string): Promise<string> => {
     try {
         const salt = await bcrypt.genSalt(saltRounds);
@@ -35,7 +37,6 @@ const isValidPassword = (password: string) => {
 	return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(password);
 };
 
-const jwtSecret = "12"
 
 const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
