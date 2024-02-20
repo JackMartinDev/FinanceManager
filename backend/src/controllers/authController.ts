@@ -8,6 +8,7 @@ export const authLogin = async(req: Request, res: Response) => {
         return res.status(400).json({error: "Username or password not present"});
     }
 
+    //TODO: Add JWT support
     try {
         const user = await User.findOne(username);
         if(user) {
