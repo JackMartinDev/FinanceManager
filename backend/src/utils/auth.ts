@@ -1,4 +1,6 @@
 import bcrypt from "bcryptjs";
+import { NextFunction, Request, Response } from "express";
+import jwt, { VerifyErrors } from "jsonwebtoken";
 
 const Hash = async(saltRounds: number, password: string): Promise<string> => {
     try {
@@ -33,5 +35,22 @@ const isValidPassword = (password: string) => {
 	return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(password);
 };
 
+const jwtSecret = "12"
 
-export {Hash, ValidateUser, isValidEmail, isValidPassword}
+const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.jwt;
+
+    if(token) {
+        jwt.verify(token, jwtSecret, (err: VerifyErrors | null) => {
+            if (err) {
+                return res.status(401).json({message: "Not authorized"})
+            } else {
+                next();
+            }
+        })
+    } else {
+        return res.status(401).json({message: "Not authorized, no token"});
+    }
+}
+
+export {Hash, ValidateUser, isValidEmail, isValidPassword, checkAuthMiddleware}
