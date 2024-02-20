@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import jwt, { VerifyErrors } from "jsonwebtoken";
+import { NotAuthError } from "./errors";
 
 const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
 
@@ -44,13 +45,13 @@ const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction
     if(token) {
         jwt.verify(token, jwtSecret, (err: VerifyErrors | null) => {
             if (err) {
-                return res.status(401).json({message: "Not authorized"})
+                return res.json(new NotAuthError())
             } else {
                 next();
             }
         })
     } else {
-        return res.status(401).json({message: "Not authorized, no token"});
+        return res.json(new NotAuthError("Not authorized, no auth token"));
     }
 }
 

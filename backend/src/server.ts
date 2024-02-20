@@ -22,7 +22,6 @@ app.use((req, _, next) => {
 	next();
 });
 
-
 app.use("/auth",authRoutes);
 
 //Prevent non logged in users from accessing content
