@@ -16,9 +16,11 @@ import {
 } from '@mantine/core';
 import GoogleButton from '../buttons/GoogleButton';
 import TwitterButton from '../buttons/TwitterButton';
+import { useState } from 'react';
 
 const LoginForm = (props: PaperProps) => {
     const [type, toggle] = useToggle(['login', 'register']);
+    const [buttonAvailableError, setButtonAvailableError] = useState<boolean>(false)
     const form = useForm({
         initialValues: {
             email: '',
@@ -41,9 +43,11 @@ const LoginForm = (props: PaperProps) => {
                 </Text>
 
                 <Group grow mb="md" mt="md">
-                    <GoogleButton radius="xl">Google</GoogleButton>
-                    <TwitterButton radius="xl">Twitter</TwitterButton>
+                    <GoogleButton onClick={()=>{setButtonAvailableError(true)}} radius="xl">Google</GoogleButton>
+                    <TwitterButton onClick={()=>{setButtonAvailableError(true)}} radius="xl">Twitter</TwitterButton>
                 </Group>
+
+                {buttonAvailableError && <Text c="red" size='sm'>This feature is not available yet</Text>}
 
                 <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
