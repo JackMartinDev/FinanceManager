@@ -1,5 +1,6 @@
 import { Title, Text, Button, Container, Group } from '@mantine/core';
 import classes from './NotFoundError.module.css';
+import { Link } from 'react-router-dom';
 
 export default function NotFoundError() {
     return (
@@ -11,9 +12,11 @@ export default function NotFoundError() {
                 been moved to another URL.
             </Text>
             <Group justify="center">
-                <Button variant="subtle" size="md">
-                    Take me back to home page
-                </Button>
+                <Link to={"/dashboard"} >
+                    <Button variant="subtle" size="md">
+                        Take me back to home page
+                    </Button>
+                </Link>
             </Group>
         </Container>
     );
