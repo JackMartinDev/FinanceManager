@@ -17,11 +17,16 @@ import {
 import GoogleButton from '../buttons/GoogleButton';
 import TwitterButton from '../buttons/TwitterButton';
 import { useState } from 'react';
-import { Form } from 'react-router-dom';
+import axios, { AxiosResponse } from 'axios';
+import { client } from '../../utils/axios';
+import { useNavigate, useNavigation } from 'react-router';
 
 const LoginForm = (props: PaperProps) => {
     const [type, toggle] = useToggle(['login', 'register']);
     const [buttonAvailableError, setButtonAvailableError] = useState<boolean>(false)
+    const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
     const form = useForm({
         initialValues: {
             email: '',
@@ -36,9 +41,27 @@ const LoginForm = (props: PaperProps) => {
         },
     });
 
-    const formSubmitHandler = () => {
+    const formSubmitHandler = async() => {
+        setIsSubmitting(true);
         //Have the functionality of the submit change based on type login or register
-       console.log(type) 
+        console.log(form.values) 
+        const endpoint = type === 'login' ? 'auth/login' : 'auth/register';
+        const loginData = {email: form.values.email, password: form.values.password}
+
+        try {
+            const response: AxiosResponse = await client.post(endpoint, loginData);
+            console.log(response);
+            navigate("/dashboard");
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                console.log(error.response?.status);
+                console.log(error.response);
+                // Handle error, e.g., show an error message in the UI
+            } else {
+                console.log(error);
+                // Handle non-Axios errors
+            }
+        }
     }
 
     const typeChangeHandler = () => {
@@ -52,6 +75,7 @@ const LoginForm = (props: PaperProps) => {
                 <Text size="lg" fw={500}>
                     Welcome to your Financial Manager, {type} with
                 </Text>
+                {isSubmitting && <p>Submitting</p>}
 
                 <Group grow mb="md" mt="md">
                     <GoogleButton onClick={()=>{setButtonAvailableError(true)}} radius="xl">Google</GoogleButton>
@@ -62,7 +86,7 @@ const LoginForm = (props: PaperProps) => {
 
                 <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-                <Form method='POST'>
+                <form onSubmit={form.onSubmit(formSubmitHandler)}>
                     <Stack>
                         {type === 'register' && (
                             <TextInput
@@ -76,7 +100,6 @@ const LoginForm = (props: PaperProps) => {
 
                         <TextInput
                             required
-                            name='email'
                             label="Email"
                             placeholder="email@gmail.com"
                             value={form.values.email}
@@ -87,7 +110,6 @@ const LoginForm = (props: PaperProps) => {
 
                         <PasswordInput
                             required
-                            name='password'
                             label="Password"
                             placeholder="Your password"
                             value={form.values.password}
@@ -115,7 +137,7 @@ const LoginForm = (props: PaperProps) => {
                             {upperFirst(type)}
                         </Button>
                     </Group>
-                </Form>
+                </form>
             </Paper>
         </Center>
     );
