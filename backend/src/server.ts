@@ -24,11 +24,11 @@ app.use((req, _, next) => {
 
 app.use("/auth",authRoutes);
 
-//Prevent non logged in users from accessing content
-app.use(checkAuthMiddleware);
 
 app.use("/test", userRoutes);
 
+//Prevent non logged in users from accessing content
+app.use(checkAuthMiddleware);
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });

@@ -6,7 +6,7 @@ export default class User {
 
     async create() {
         try {
-            const newUser = await db.query("INSERT INTO users (id, username, password) VALUES ($1, $2, $3) RETURNING *",[this.user.id, this.user.username, this.user.password]);
+            const newUser = await db.query("INSERT INTO users (id, username, email, password) VALUES ($1, $2, $3, $4) RETURNING *",[this.user.id, this.user.username, this.user.email,this.user.password]);
             return newUser
         } catch (error) {
             throw error
@@ -53,9 +53,9 @@ export default class User {
         } 
     }
 
-    static async findOne(username: string):Promise<TUser | undefined>{
+    static async findOne(email: string):Promise<TUser | undefined>{
         try {
-            const user = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+            const user = await db.query("SELECT * FROM users WHERE email = $1", [email]);
             return user.rows[0];
         } catch (error) {
            throw error 

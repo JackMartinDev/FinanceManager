@@ -31,9 +31,11 @@ export const createUser = async(req: Request<{}, {}, TUser>, res:Response) => {
         //Add some validation here
         const username = req.body.username;
         const password = await Hash(10,req.body.password);
+        const email = req.body.email;
         const id = crypto.randomUUID();
 
-        const user = new User({id, username, password});
+
+        const user = new User({id, username, email, password});
         user.create();
         res.status(200).json({message: "User created successfully"})
     } catch (error) {

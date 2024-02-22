@@ -11,21 +11,21 @@ const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
 
 export const authLogin = async(req: Request, res: Response) => {
     //TODO: Add username, password validation
-    const {username, password} = req.body; 
-    if(!username || !password) {
-        return res.status(400).json({error: "Username or password not present"});
+    const {email, password} = req.body; 
+    if(!email || !password) {
+        return res.status(400).json({error: "Email or password not present"});
     }
 
     //TODO: Add JWT support
     try {
-        const user = await User.findOne(username);
+        const user = await User.findOne(email);
         if(user) {
             if(await ValidateUser(password, user.password)) {
                 //Change what info is sent to the FE
                 
                 const maxAge = 3 * 60 * 60;
                 const token = jwt.sign(
-                    {id: user.id, username: user.username},
+                    {id: user.id, email: user.email},
                     jwtSecret,
                     {expiresIn: maxAge}
                 );
@@ -33,7 +33,7 @@ export const authLogin = async(req: Request, res: Response) => {
                     httpOnly: true,
                     maxAge: maxAge * 1000,
                 });
-
+                //Remove password etc from sent data
                 return res.status(200).json({message: "Successful login", user: user});
 
             } else {
