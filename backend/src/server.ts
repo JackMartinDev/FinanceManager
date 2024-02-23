@@ -13,7 +13,10 @@ dotenv.config();
 //TODO Add .env file
 const PORT = process.env.PORT;
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', 
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -24,11 +27,12 @@ app.use((req, _, next) => {
 
 app.use("/auth",authRoutes);
 
+//Prevent non logged in users from accessing content
+app.use(checkAuthMiddleware);
 
 app.use("/test", userRoutes);
 
-//Prevent non logged in users from accessing content
-app.use(checkAuthMiddleware);
+
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });

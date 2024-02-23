@@ -13,6 +13,7 @@ export class NotFoundError {
     }
 }
 
+
 export class NotAuthError {
     error:string;
     status:number;

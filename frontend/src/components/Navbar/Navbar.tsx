@@ -13,6 +13,8 @@ import {
 } from '@tabler/icons-react';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './Navbar.module.css';
+import axios from 'axios';
+import { client } from '../../utils/axios';
 
 interface NavbarLinkProps {
     icon: typeof IconHome2;
@@ -53,6 +55,15 @@ const Navbar = () => {
         />
     ));
 
+    const test = async() =>{
+        try {
+            const res = await client.get("test");
+            console.log(res)
+        } catch (error) {
+           console.log(error); 
+        }
+    }
+
     return (
         <nav className={classes.navbar}>
             <Center>
@@ -69,6 +80,7 @@ const Navbar = () => {
                 <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
                 <NavbarLink icon={IconLogout} label="Logout" />
             </Stack>
+            <button onClick={test}>Test</button>
         </nav>
     );
 }

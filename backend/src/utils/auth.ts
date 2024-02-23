@@ -41,17 +41,18 @@ const isValidPassword = (password: string) => {
 
 const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
+    console.log(token);
 
     if(token) {
         jwt.verify(token, jwtSecret, (err: VerifyErrors | null) => {
             if (err) {
-                return res.json(new NotAuthError())
+                return res.status(401).json(new NotAuthError())
             } else {
                 next();
             }
         })
     } else {
-        return res.json(new NotAuthError("Not authorized, no auth token"));
+        return res.status(401).json(new NotAuthError("Not authorized, no auth token"));
     }
 }
 

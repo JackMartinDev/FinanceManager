@@ -19,11 +19,12 @@ import TwitterButton from '../buttons/TwitterButton';
 import { useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { client } from '../../utils/axios';
-import { useNavigate, useNavigation } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const LoginForm = (props: PaperProps) => {
     const [type, toggle] = useToggle(['login', 'register']);
     const [buttonAvailableError, setButtonAvailableError] = useState<boolean>(false)
+    const [loginError, setLoginError] = useState<boolean>(false)
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -56,6 +57,7 @@ const LoginForm = (props: PaperProps) => {
             if(axios.isAxiosError(error)){
                 console.log(error.response?.status);
                 console.log(error.response);
+                setLoginError(true);
                 // Handle error, e.g., show an error message in the UI
             } else {
                 console.log(error);
@@ -117,6 +119,8 @@ const LoginForm = (props: PaperProps) => {
                             error={form.errors.password && 'Your password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, a number and a symbol.'}
                             radius="md"
                         />
+
+                {loginError && <Text c="red" size='sm'>Email or password is incorrect</Text>}
 
                         {type === 'register' && (
                             <Checkbox

@@ -10,6 +10,7 @@ const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
 //TODO: Add user registration route, Also assign jwt
 
 export const authLogin = async(req: Request, res: Response) => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
     //TODO: Add username, password validation
     const {email, password} = req.body; 
     if(!email || !password) {
@@ -23,7 +24,8 @@ export const authLogin = async(req: Request, res: Response) => {
             if(await ValidateUser(password, user.password)) {
                 //Change what info is sent to the FE
                 
-                const maxAge = 3 * 60 * 60;
+                const maxAge = 6 * 60 * 60 ;
+                
                 const token = jwt.sign(
                     {id: user.id, email: user.email},
                     jwtSecret,
@@ -31,12 +33,15 @@ export const authLogin = async(req: Request, res: Response) => {
                 );
                 res.cookie("jwt", token, {
                     httpOnly: true,
+                    secure: true,
+                    sameSite: 'strict',
                     maxAge: maxAge * 1000,
                 });
                 //Remove password etc from sent data
                 return res.status(200).json({message: "Successful login", user: user});
 
             } else {
+                //use differenr erro codes maybe
                 return res.status(400).json({error: "Incorrect username or password"});
             }
         } else {
