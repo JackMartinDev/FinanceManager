@@ -46,6 +46,7 @@ const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction
     if(token) {
         jwt.verify(token, jwtSecret, (err: VerifyErrors | null) => {
             if (err) {
+                res.clearCookie("jwt");
                 return res.status(401).json(new NotAuthError())
             } else {
                 next();

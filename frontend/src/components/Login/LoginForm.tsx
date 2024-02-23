@@ -37,7 +37,7 @@ const LoginForm = (props: PaperProps) => {
             password: '',
             terms: true,
         },
-
+//Find a way to prevent to input validation to not show on login form, only registration
         validate: {
             email: (val) => (/^\S+@\S+\.\S+$/.test(val) ? null : 'Invalid email'),
             password: (val) => (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(val) ? null : 'Your password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, a number and a symbol'),
