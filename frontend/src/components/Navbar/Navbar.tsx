@@ -13,7 +13,6 @@ import {
 } from '@tabler/icons-react';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './Navbar.module.css';
-import axios from 'axios';
 import { client } from '../../utils/axios';
 
 interface NavbarLinkProps {

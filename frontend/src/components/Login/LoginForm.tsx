@@ -20,6 +20,7 @@ import { useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { client } from '../../utils/axios';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginForm = (props: PaperProps) => {
     const [type, toggle] = useToggle(['login', 'register']);
@@ -27,6 +28,7 @@ const LoginForm = (props: PaperProps) => {
     const [loginError, setLoginError] = useState<boolean>(false)
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const {login} = useAuth();
 
     const form = useForm({
         initialValues: {
@@ -51,6 +53,7 @@ const LoginForm = (props: PaperProps) => {
 
         try {
             const response: AxiosResponse = await client.post(endpoint, loginData);
+            login(response.data.user);
             console.log(response);
             navigate("/dashboard");
         } catch (error) {

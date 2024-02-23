@@ -2,8 +2,22 @@ import { Request, Response } from "express"
 import User from "../models/user"
 import { ValidateUser } from "../utils/auth";
 import jwt from "jsonwebtoken";
+import { NotAuthError } from "../utils/errors";
 
 const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
+
+export const refresh = async(req:Request, res: Response) => {
+    const token = req.cookies.jwt;
+    console.log(token);
+
+    if(token) {
+        const payload = jwt.decode(token);
+        return res.status(200).json(payload);
+    } else {
+        return res.status(200).json({message: "No session"});
+    }
+
+}
 
 //TODO: Add message field to errors
 
@@ -27,7 +41,7 @@ export const authLogin = async(req: Request, res: Response) => {
                 const maxAge = 6 * 60 * 60 ;
                 
                 const token = jwt.sign(
-                    {id: user.id, email: user.email},
+                    {id: user.id, email: user.email, username: user.username},
                     jwtSecret,
                     {expiresIn: maxAge}
                 );
@@ -37,8 +51,8 @@ export const authLogin = async(req: Request, res: Response) => {
                     sameSite: 'strict',
                     maxAge: maxAge * 1000,
                 });
-                //Remove password etc from sent data
-                return res.status(200).json({message: "Successful login", user: user});
+                const responseUser = {id: user.id, username: user.username}
+                return res.status(200).json({message: "Successful login", user: responseUser});
 
             } else {
                 //use differenr erro codes maybe
