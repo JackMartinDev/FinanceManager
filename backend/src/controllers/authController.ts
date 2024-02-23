@@ -14,10 +14,11 @@ export const refresh = async(req:Request, res: Response) => {
         const payload = jwt.decode(token);
         return res.status(200).json(payload);
     } else {
-        return res.status(200).json({message: "No session"});
+        return res.status(401).json(new NotAuthError);
     }
-
 }
+
+
 
 //TODO: Add message field to errors
 
@@ -69,3 +70,13 @@ export const authLogin = async(req: Request, res: Response) => {
 //        });
     }
 }
+
+
+export const authLogout = async(_:Request, res: Response) => {
+    res.cookie("jwt", "", {
+        httpOnly: true,
+        expires: new Date(0),
+    });
+    return res.status(200).json({message: "Succesfully logged out"});
+}
+

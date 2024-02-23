@@ -14,6 +14,8 @@ import {
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './Navbar.module.css';
 import { client } from '../../utils/axios';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router';
 
 interface NavbarLinkProps {
     icon: typeof IconHome2;
@@ -44,6 +46,8 @@ const mockdata = [
 
 const Navbar = () => {
     const [active, setActive] = useState(2);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
 
     const links = mockdata.map((link, index) => (
         <NavbarLink
@@ -63,6 +67,16 @@ const Navbar = () => {
         }
     }
 
+    const logoutHandler = async() => {
+        try {
+            const response = await client.get("auth/logout")
+            logout();
+            navigate("/");
+        } catch (error) {
+            console.log("Something went wrong during logout")        
+        }
+    }
+
     return (
         <nav className={classes.navbar}>
             <Center>
@@ -77,7 +91,7 @@ const Navbar = () => {
 
             <Stack justify="center" gap={0}>
                 <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
-                <NavbarLink icon={IconLogout} label="Logout" />
+                <NavbarLink icon={IconLogout} onClick={logoutHandler} label="Logout" />
             </Stack>
             <button onClick={test}>Test</button>
         </nav>
