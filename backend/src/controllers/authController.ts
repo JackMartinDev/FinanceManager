@@ -1,8 +1,9 @@
 import { Request, Response } from "express"
 import User from "../models/user"
-import { ValidateUser } from "../utils/auth";
+import { Hash, ValidateUser } from "../utils/auth";
 import jwt from "jsonwebtoken";
 import { NotAuthError } from "../utils/errors";
+import { TUser } from "../utils/types";
 
 const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
 
@@ -18,7 +19,38 @@ export const refresh = async(req:Request, res: Response) => {
     }
 }
 
+export const authRegister = async(req: Request<{}, {}, TUser>, res:Response) => {
+    try {
+        //Add some validation here
+        const username = req.body.username;
+        const password = await Hash(10,req.body.password);
+        const email = req.body.email;
+        const id = crypto.randomUUID();
 
+
+        const user = new User({id, username, email, password});
+        user.create();
+
+        const maxAge = 6 * 60 * 60 ;
+
+        const token = jwt.sign(
+            {id, email, username},
+            jwtSecret,
+            {expiresIn: maxAge}
+        );
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: maxAge * 1000,
+        });
+
+        const responseUser = {id, username}
+        return res.status(200).json({message: "User created succesfully", user: responseUser});
+    } catch (error) {
+        res.status(400).json({message: "An error occured"})
+    }
+}
 
 //TODO: Add message field to errors
 

@@ -49,7 +49,7 @@ const LoginForm = (props: PaperProps) => {
         //Have the functionality of the submit change based on type login or register
         console.log(form.values) 
         const endpoint = type === 'login' ? 'auth/login' : 'auth/register';
-        const loginData = {email: form.values.email, password: form.values.password}
+        const loginData = form.values;
 
         try {
             const response: AxiosResponse = await client.post(endpoint, loginData);
@@ -66,6 +66,8 @@ const LoginForm = (props: PaperProps) => {
                 console.log(error);
                 // Handle non-Axios errors
             }
+        } finally{
+            setIsSubmitting(false);
         }
     }
 
