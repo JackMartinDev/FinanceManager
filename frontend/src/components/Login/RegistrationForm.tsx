@@ -41,11 +41,9 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
                     placeholder="email@gmail.com"
                     value={form.values.email}
                     onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                    error={form.errors.email && 'Invalid email'}
+                    error={props.registrationError ? "Email is already in use" : form.errors.email && 'Invalid email'}
                     radius="md"
                 />
-
-                {props.registrationError && <Text c="red" size='sm'>Email is already in use</Text>}
 
                 <PasswordInput
                     label="Password"

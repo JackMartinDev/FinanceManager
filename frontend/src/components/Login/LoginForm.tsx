@@ -39,7 +39,7 @@ const LoginForm = (props: {typeChangeHandler: () => void, formSubmitHandler: (fo
                     radius="md"
                 />
 
-                {props.loginError && <Text c="red" size='sm'>Email or password is incorrect</Text>}
+                {props.loginError && <Text c="red" size='md'>Email or password is incorrect</Text>}
 
             </Stack>
 

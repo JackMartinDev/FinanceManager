@@ -61,6 +61,8 @@ const LoginFormWrapper = (props: PaperProps) => {
 
     const typeChangeHandler = () => {
         setButtonAvailableError(false);
+        setLoginError(false);
+        setRegistrationError(false);
         toggle();
     }
 
