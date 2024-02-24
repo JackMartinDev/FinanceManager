@@ -2,7 +2,6 @@ import { Anchor, Button, Checkbox, Group, PasswordInput, Stack, TextInput } from
 import { useForm } from "@mantine/form";
 import { upperFirst } from "@mantine/hooks";
 
-
 export type RegistrationFormValues = {
     email: string,
     username:string,
@@ -19,6 +18,7 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
             terms: true,
         },
         validate: {
+            username: (val) => (/^.{2,16}$/.test(val) ? null : "Username must be between 2 and 16 characters long"),
             email: (val) => (/^\S+@\S+\.\S+$/.test(val) ? null : 'Invalid email'),
             password: (val) => (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(val) ? null : 'Your password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, a number and a symbol'),
         },
@@ -32,11 +32,11 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
                     placeholder="Username"
                     value={form.values.username}
                     onChange={(event) => form.setFieldValue('username', event.currentTarget.value)}
+                    error={form.errors.username && "Username must be between 2 and 16 characters long"}
                     radius="md"
                 />
 
                 <TextInput
-                    required
                     label="Email"
                     placeholder="email@gmail.com"
                     value={form.values.email}
@@ -46,7 +46,6 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
                 />
 
                 <PasswordInput
-                    required
                     label="Password"
                     placeholder="Your password"
                     value={form.values.password}

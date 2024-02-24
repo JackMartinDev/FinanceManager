@@ -1,16 +1,10 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
 import {
-    TextInput,
-    PasswordInput,
     Text,
     Paper,
     Group,
     PaperProps,
-    Button,
     Divider,
-    Anchor,
-    Stack,
     Center,
 } from '@mantine/core';
 import GoogleButton from '../buttons/GoogleButton';
@@ -22,61 +16,8 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
 
 import RegistrationForm, {RegistrationFormValues} from './RegistrationForm';
+import LoginForm, { LoginFormValues } from './LoginForm';
 
-type LoginFormValues = {
-    email: string,
-    password: string
-}
-
-const LoginForm = (props: {typeChangeHandler: () => void, formSubmitHandler: (formValues:LoginFormValues) => void, loginError: boolean}) =>{
-        const form = useForm({
-        initialValues: {
-            email: '',
-            password: '',
-        },
-        validate: {
-            email: (val) => (/^\s*\S.*$/.test(val) ? null : 'Email field can not be empty'),
-            password: (val) => (/^\s*\S.*$/.test(val) ? null : 'Password field can not be empty'),
-        },
-    });
-    return(
-                <form onSubmit={form.onSubmit((values) => props.formSubmitHandler(values))}>
-                    <Stack>
-                        <TextInput
-                            required
-                            label="Email"
-                            placeholder="email@gmail.com"
-                            value={form.values.email}
-                            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                            error={form.errors.email && 'Invalid email'}
-                            radius="md"
-                        />
-
-                        <PasswordInput
-                            required
-                            label="Password"
-                            placeholder="Your password"
-                            value={form.values.password}
-                            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                            error={form.errors.password && 'Your password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, a number and a symbol.'}
-                            radius="md"
-                        />
-
-                        {props.loginError && <Text c="red" size='sm'>Email or password is incorrect</Text>}
-
-                    </Stack>
-
-                    <Group justify="space-between" mt="xl">
-                        <Anchor component="button" type="button" c="dimmed" onClick={props.typeChangeHandler} size="xs">
-                                Already have an account? Login
-                        </Anchor>
-                        <Button type="submit" radius="xl">
-                            {upperFirst("Login")}
-                        </Button>
-                    </Group>
-                </form>
-    );
-}
 
 const LoginFormWrapper = (props: PaperProps) => {
     const [type, toggle] = useToggle(['login', 'register']);
@@ -89,8 +30,6 @@ const LoginFormWrapper = (props: PaperProps) => {
 
     const formSubmitHandler = async(formValues: RegistrationFormValues | LoginFormValues) => {
         setIsSubmitting(true);
-        //Have the functionality of the submit change based on type login or register
-        console.log(formValues) 
         const endpoint = type === 'login' ? 'auth/login' : 'auth/register';
         const loginData = formValues;
 
@@ -115,8 +54,8 @@ const LoginFormWrapper = (props: PaperProps) => {
     }
 
     const typeChangeHandler = () => {
+        setButtonAvailableError(false);
         toggle();
-        //form.reset();
     }
 
     return (
