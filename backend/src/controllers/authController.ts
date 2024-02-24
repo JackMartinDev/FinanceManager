@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import User from "../models/user"
-import { Hash, ValidateUser } from "../utils/auth";
+import { Hash, ValidateUser, isEmailPresent, isPasswordPresent, isValidEmail, isValidPassword, isValidUsername } from "../utils/auth";
 import jwt from "jsonwebtoken";
 import { NotAuthError } from "../utils/errors";
 import { TUser } from "../utils/types";
@@ -20,14 +20,16 @@ export const refresh = async(req:Request, res: Response) => {
 }
 
 export const authRegister = async(req: Request<{}, {}, TUser>, res:Response) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = await Hash(10,req.body.password);
+    const id = crypto.randomUUID();
+
+    if(!isValidEmail(email) || !isValidPassword(req.body.password) || !isValidUsername(username)) {
+        return res.status(400).json({error: "Email, username or password is not valid"});
+    }
+
     try {
-        //Add some validation here
-        const username = req.body.username;
-        const password = await Hash(10,req.body.password);
-        const email = req.body.email;
-        const id = crypto.randomUUID();
-
-
         const user = new User({id, username, email, password});
         user.create();
 
@@ -60,7 +62,7 @@ export const authLogin = async(req: Request, res: Response) => {
     await new Promise(resolve => setTimeout(resolve, 2000));
     //TODO: Add username, password validation
     const {email, password} = req.body; 
-    if(!email || !password) {
+    if(!isEmailPresent(email) || !isPasswordPresent(password)) {
         return res.status(400).json({error: "Email or password not present"});
     }
 

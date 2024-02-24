@@ -5,7 +5,7 @@ import { NotAuthError } from "./errors";
 
 const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
 
-const Hash = async(saltRounds: number, password: string): Promise<string> => {
+export const Hash = async(saltRounds: number, password: string): Promise<string> => {
     try {
         const salt = await bcrypt.genSalt(saltRounds);
         const hash = await bcrypt.hash(password, salt);
@@ -17,7 +17,7 @@ const Hash = async(saltRounds: number, password: string): Promise<string> => {
     }
 }
 
-const ValidateUser = async(password:string, hash:string) => {
+export const ValidateUser = async(password:string, hash:string) => {
     try {
         const valid = await bcrypt.compare(password, hash);
         console.log(valid);
@@ -28,18 +28,28 @@ const ValidateUser = async(password:string, hash:string) => {
     }
 }
 
-const isValidEmail = (email: string) => {
-    if(!email) return false;
+export const isEmailPresent = (email:string) =>{
+    return /^\s*\S.*$/.test(email);
+}
+
+export const isPasswordPresent = (password:string) =>{
+    return /^\s*\S.*$/.test(password);
+}
+
+export const isValidUsername = (username: string) =>{
+    return /^.{2,16}$/.test(username)
+}
+
+export const isValidEmail = (email: string) => {
 	return /^\S+@\S+\.\S+$/.test(email);
 };
 
-const isValidPassword = (password: string) => {
-    if(!password) return false;
+export const isValidPassword = (password: string) => {
 	return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(password);
 };
 
 
-const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction) => {
+export const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
     console.log(token);
 
@@ -56,5 +66,3 @@ const checkAuthMiddleware = async(req:Request, res: Response, next: NextFunction
         return res.status(401).json(new NotAuthError("Not authorized, no auth token"));
     }
 }
-
-export {Hash, ValidateUser, isValidEmail, isValidPassword, checkAuthMiddleware}
