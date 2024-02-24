@@ -40,7 +40,6 @@ const LoginFormWrapper = (props: PaperProps) => {
             navigate("/dashboard");
         } catch (error) {
             if(axios.isAxiosError(error)){
-                console.log(error.response?.status);
                 console.log(error.response);
                 setLoginError(true);
                 // Handle error, e.g., show an error message in the UI

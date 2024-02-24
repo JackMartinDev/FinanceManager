@@ -4,13 +4,16 @@ import App from './App.tsx'
 import '@mantine/core/styles.css'
 import { MantineProvider } from '@mantine/core';
 import { AuthProvider } from './context/AuthContext.tsx';
+import AxiosErrorHandler from './components/Error/AxiosErrorHandler.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <AuthProvider>
             <MantineProvider>
-                <App />
+                <AxiosErrorHandler>
+                    <App />
+                </AxiosErrorHandler>
             </MantineProvider>
         </AuthProvider>
-  </React.StrictMode>,
+    </React.StrictMode>,
 )
