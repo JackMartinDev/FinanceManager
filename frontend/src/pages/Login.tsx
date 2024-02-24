@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import LoginForm from "../components/Login/LoginForm"
+import LoginFormWrapper from "../components/Login/LoginFormWrapper"
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
@@ -10,7 +10,7 @@ const LoginPage = () => {
         return <Navigate to="/dashboard"/>;
     } else {
         return (
-            <LoginForm />
+            <LoginFormWrapper />
         );
     }
 }
