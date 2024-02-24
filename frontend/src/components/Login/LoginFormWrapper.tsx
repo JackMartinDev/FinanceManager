@@ -23,6 +23,7 @@ const LoginFormWrapper = (props: PaperProps) => {
     const [type, toggle] = useToggle(['login', 'register']);
     const [buttonAvailableError, setButtonAvailableError] = useState<boolean>(false)
     const [loginError, setLoginError] = useState<boolean>(false)
+    const [registrationError, setRegistrationError] = useState<boolean>(false)
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const {login} = useAuth();
@@ -40,9 +41,15 @@ const LoginFormWrapper = (props: PaperProps) => {
             navigate("/dashboard");
         } catch (error) {
             if(axios.isAxiosError(error)){
-                console.log(error.response);
-                setLoginError(true);
-                // Handle error, e.g., show an error message in the UI
+                switch(error.response?.status){
+                    case 409:
+                        setRegistrationError(true);
+                        break;
+                    case 401:
+                        setLoginError(true);
+                        break;
+                    default:
+                }
             } else {
                 console.log(error);
                 // Handle non-Axios errors
@@ -76,7 +83,7 @@ const LoginFormWrapper = (props: PaperProps) => {
                 
                 {type === "login" 
                     ? <LoginForm typeChangeHandler={typeChangeHandler} formSubmitHandler={formSubmitHandler} loginError={loginError}/> 
-                    : <RegistrationForm typeChangeHandler={typeChangeHandler} formSubmitHandler={formSubmitHandler}/>}
+                    : <RegistrationForm typeChangeHandler={typeChangeHandler} formSubmitHandler={formSubmitHandler} registrationError={registrationError}/>}
 
             </Paper>
         </Center>

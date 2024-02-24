@@ -1,4 +1,4 @@
-import { Anchor, Button, Checkbox, Group, PasswordInput, Stack, TextInput } from "@mantine/core";
+import { Anchor, Button, Checkbox, Group, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { upperFirst } from "@mantine/hooks";
 
@@ -9,7 +9,7 @@ export type RegistrationFormValues = {
     terms: boolean,
 }
 
-const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler: (formValues: RegistrationFormValues)=>void}) => {
+const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler: (formValues: RegistrationFormValues)=>void, registrationError:boolean}) => {
     const form = useForm<RegistrationFormValues>({
         initialValues: {
             email: '',
@@ -45,6 +45,8 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
                     radius="md"
                 />
 
+                {props.registrationError && <Text c="red" size='sm'>Email is already in use</Text>}
+
                 <PasswordInput
                     label="Password"
                     placeholder="Your password"
@@ -59,6 +61,7 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
                     checked={form.values.terms}
                     onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
                 />
+
             </Stack>
 
             <Group justify="space-between" mt="xl">

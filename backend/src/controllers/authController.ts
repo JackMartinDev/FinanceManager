@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import User from "../models/user"
 import { Hash, ValidateUser, isEmailPresent, isPasswordPresent, isValidEmail, isValidPassword, isValidUsername } from "../utils/auth";
-import { NotAuthError } from "../utils/errors";
+import { EmailInUseError, FailedLoginError, NotAuthError } from "../utils/errors";
 import { TUser } from "../utils/types";
 
 const jwtSecret = process.env.JWT_SECRET || 'defaultSecretValue';
@@ -29,7 +29,13 @@ export const authRegister = async(req: Request<{}, {}, TUser>, res:Response) => 
         return res.status(400).json({error: "Email, username or password is not valid"});
     }
 
+
+
     try {
+        const test = await User.findOne(email);
+        if (test){
+            return res.status(409).json(new EmailInUseError)
+        }
         const user = new User({id, username, email, password});
         user.create();
 
@@ -87,10 +93,10 @@ export const authLogin = async(req: Request, res: Response) => {
 
             } else {
                 //use differenr erro codes maybe
-                return res.status(400).json({error: "Incorrect username or password"});
+                return res.status(401).json(new FailedLoginError);
             }
         } else {
-            return res.status(400).json({error: "Incorrect username or password"});
+            return res.status(401).json(new FailedLoginError);
         }
     } catch (error) {
         throw error

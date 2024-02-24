@@ -17,9 +17,8 @@ const AxiosErrorHandler = ( {children}: Props ) => {
             response => response, 
             async(error) => {
                 if(error.response){
-                    const status = error.response.status;
-                    switch(status){
-                        case 401:
+                    switch(error.response.data.error){
+                        case "NotAuthError":
                             console.log("Not authenticated");
                             open();
                             break;
@@ -29,7 +28,6 @@ const AxiosErrorHandler = ( {children}: Props ) => {
                 } else {
                     console.log("Error without response. Network etc")
                 }
-
                 return Promise.reject(error);
             })
 

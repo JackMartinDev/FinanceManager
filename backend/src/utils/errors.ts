@@ -25,3 +25,28 @@ export class NotAuthError {
         this.message = message;
     }
 }
+
+export class EmailInUseError {
+    error:string;
+    status:number;
+    message:string;
+
+    constructor(message:string = "Email is in use") {
+        this.error = "EmailInUseError";
+        this.status = 409;
+        this.message = message;
+    }
+}
+
+export class FailedLoginError {
+    error:string;
+    status:number;
+    message:string;
+
+    constructor(message:string = "Failed to login") {
+        this.error = "FailedLoginError";
+        this.status = 401;
+        this.message = message;
+    }
+}
+
