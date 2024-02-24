@@ -7,58 +7,54 @@ export default class User {
     async create() {
         try {
             const newUser = await db.query("INSERT INTO users (id, username, email, password) VALUES ($1, $2, $3, $4) RETURNING *",[this.user.id, this.user.username, this.user.email,this.user.password]);
-            return newUser
+            return {result: newUser, error: null}
         } catch (error) {
-            throw error
+            return {result: null, error};
         }
     }
 
     async update() {
         try {
             const updateUser = await db.query("UPDATE user SET username=$1, password=$2", [this.user.username, this.user.password]);
-            return updateUser
+            return {result: updateUser, error: null}
         } catch (error) {
-           throw error 
+           return {result: null, error}
         }
     }
 
-    static async fetchAll(): Promise<User[]> {
+    static async fetchAll(): Promise<{result: User[] | null, error: any}> {
         try {
             const users = await db.query("SELECT * FROM users");
-            return users.rows
+            return {result: users.rows, error: null}
         } catch (error) {
-            throw error
+            return {result: null, error}
         }
     }
 
-    static async fetchById(id: string): Promise<User | undefined>{
+    static async fetchById(id: string): Promise<{result: User | null, error: any}>{
         try{
             const user = await db.query("SELECT * FROM user where id = $1", [id]);
-            if (user.rowCount === 0) {
-                console.log("This client does not exist");
-                return
-            }
-            return user.rows[0];
+            return {result: user.rows[0], error: null};
         } catch(error) {
-            throw error
+            return {result: null, error}
         }
     }
 
     static async deleteById(id:string) {
         try {
             const deleteUser = await db.query("DELETE FROM users WHERE id = $1",[id]);
-            return !!deleteUser.rowCount;
+            return {result: !!deleteUser.rowCount, error: null};
         } catch (error) {
-            throw error
+            return {result: null, error}
         } 
     }
 
-    static async findOne(email: string):Promise<TUser | undefined>{
+    static async findOne(email: string):Promise<{result: TUser | null, error: any}>{
         try {
             const user = await db.query("SELECT * FROM users WHERE email = $1", [email]);
-            return user.rows[0];
+            return {result: user.rows[0], error: null};
         } catch (error) {
-           throw error 
+           return {result: null, error}
         }
     }
 }
