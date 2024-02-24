@@ -7,7 +7,7 @@ export default class User {
     async create() {
         try {
             const newUser = await db.query("INSERT INTO users (id, username, email, password) VALUES ($1, $2, $3, $4) RETURNING *",[this.user.id, this.user.username, this.user.email,this.user.password]);
-            return {result: newUser, error: null}
+            return {result: newUser.rows[0], error: null}
         } catch (error) {
             return {result: null, error};
         }
@@ -16,7 +16,7 @@ export default class User {
     async update() {
         try {
             const updateUser = await db.query("UPDATE user SET username=$1, password=$2", [this.user.username, this.user.password]);
-            return {result: updateUser, error: null}
+            return {result: updateUser.rows[0], error: null}
         } catch (error) {
            return {result: null, error}
         }

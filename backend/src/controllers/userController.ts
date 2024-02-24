@@ -5,66 +5,65 @@ import { TUser } from "../utils/types";
 import { Hash } from "../utils/auth";
 
 export const getUsers = async(_: Request, res: Response) => {
-    try {
-        const users = await User.fetchAll();
-        return res.status(200).json(users)
-    } catch (error) {
-        throw error 
+    const {result, error} = await User.fetchAll();
+    if(error){
+        return res.status(500).json({error: "An error occured"});
     }
+    return res.status(201).json(result)
 } 
 
 export const getUser = async(req: Request, res: Response) =>{
     const {id} = req.params;
-    try {
-        const user = await User.fetchById(id);
-        if (!user) {
-            return res.status(400).json({error: "No user found"})
-        }
-        return res.status(200).json(user);
-    } catch (error) {
-        res.status(400).json({message: "An error occured"})
+    const {result, error} = await User.fetchById(id);
+    if(error) {
+        return res.status(500).json({error: "An error occured"})
     }
+
+    if (!result) {
+        return res.status(400).json({error: "No user found"})
+    }
+    return res.status(201).json(result);
 }
 
+// Not currently in use
 export const createUser = async(req: Request<{}, {}, TUser>, res:Response) => {
-    try {
-        //Add some validation here
-        const username = req.body.username;
-        const password = await Hash(10,req.body.password);
-        const email = req.body.email;
-        const id = crypto.randomUUID();
+    //Add some validation here
+    const username = req.body.username;
+    const password = await Hash(10,req.body.password);
+    const email = req.body.email;
+    const id = crypto.randomUUID();
 
 
-        const user = new User({id, username, email, password});
-        user.create();
-        res.status(200).json({message: "User created successfully"})
-    } catch (error) {
-        res.status(400).json({message: "An error occured"})
+    const user = new User({id, username, email, password});
+    const {result, error} = await user.create();
+    if(error) {
+        res.status(500).json({error: "An error occured"})
     }
+    res.status(200).json({message: "User created successfully"})
 }
 
+// Not currently in use
 export const patchUser = async(req: Request<ParamsDictionary, {}, TUser>, res:Response) => {
     const {id} = req.params;
     const data = req.body;
-    try {
-        const user = new User(data, id);
-        user.update();
-        res.status(200).json({message: "User updated successfully"})
-    } catch (error) {
-        res.status(400).json({message: "An error occured"})
+    const user = new User(data, id);
+    const {result, error} = await user.update();
+    if(error) {
+        res.status(500).json({error: "An error occured"})
     }
+    res.status(200).json({message: "User updated successfully"})
 }
 
+// Not currently in use
 export const deleteUser = async(req: Request, res:Response) => {
     const {id} = req.params;
-    try {
-        const is_success =  await User.deleteById(id);
-        if(is_success) {
-            res.status(200).json({message: `Deleted client with ID: ${id}`});
-        }else {
-            res.status(400).json({message: `No client exists with ID: ${id}`});
-        }
-    } catch (error) {
-        res.status(400).json({message: "An error occured"})
+    const {result, error} =  await User.deleteById(id);
+    if(error) {
+        res.status(500).json({error: "An error occured"})
+    }
+    if(result) {
+        res.status(200).json({message: `Deleted client with ID: ${id}`});
+    }else {
+        res.status(400).json({message: `No client exists with ID: ${id}`});
     }
 }
