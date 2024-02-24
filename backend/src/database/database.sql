@@ -1,7 +1,7 @@
 
-CREATE TABLE users(
+create table users(
     id VARCHAR(100) PRIMARY KEY,
-    username VARCHAR(100) UNIQUE,
+    username VARCHAR(100),
     email VARCHAR(100) UNIQUE,
     password VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
