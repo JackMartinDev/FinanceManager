@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Center, Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
+import { Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
 import {
     IconHome2,
     IconGauge,
     IconDeviceDesktopAnalytics,
-    IconFingerprint,
+    IconCreditCard,
     IconCalendarStats,
     IconUser,
     IconSettings,
@@ -35,11 +35,11 @@ const NavbarLink = ({ icon: Icon, label, active, onClick }: NavbarLinkProps) => 
 
 const mockdata = [
     { icon: IconHome2, label: 'Home', to: '/home' },
-    { icon: IconGauge, label: 'Dashboard', to: '/dashboard' },
-    { icon: IconDeviceDesktopAnalytics, label: 'Analytics', to: '/analytics/' },
-    { icon: IconCalendarStats, label: 'Releases', to: '/releases' },
-    { icon: IconUser, label: 'Account', to: '/account' },
-    { icon: IconFingerprint, label: 'Security', to: '/security' },
+    { icon: IconGauge, label: 'Dashboard', to: '/' },
+    { icon: IconDeviceDesktopAnalytics, label: 'Investments', to: '/investments' },
+    { icon: IconCreditCard, label: 'Subscriptions', to: '/subscriptions' },
+    { icon: IconCalendarStats, label: 'Calendar', to: '/calendar' },
+    { icon: IconUser, label: 'Profile', to: '/profile' },
     { icon: IconSettings, label: 'Settings', to: '/settings' },
 ];
 
@@ -75,7 +75,7 @@ const Navbar = () => {
         try {
             const response = await client.get("auth/logout")
             logout();
-            navigate("/");
+            navigate("/login");
         } catch (error) {
             console.log("Something went wrong during logout")        
         }

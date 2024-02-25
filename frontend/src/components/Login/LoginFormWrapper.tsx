@@ -38,7 +38,7 @@ const LoginFormWrapper = (props: PaperProps) => {
             const response: AxiosResponse = await client.post(endpoint, loginData);
             login(response.data.user);
             console.log(response);
-            navigate("/dashboard");
+            navigate("/");
         } catch (error) {
             if(axios.isAxiosError(error)){
                 switch(error.response?.status){

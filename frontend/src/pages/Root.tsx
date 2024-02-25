@@ -1,7 +1,6 @@
 import { Outlet } from "react-router"
 import Navbar from "../components/Navbar/Navbar"
 import { AppShell, Burger, Group, Title } from "@mantine/core"
-import { MantineLogo } from "@mantinex/mantine-logo"
 import { IconHomeDollar } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 

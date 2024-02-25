@@ -12,7 +12,7 @@ export default function NotFoundError() {
                 been moved to another URL.
             </Text>
             <Group justify="center">
-                <Link to={"/dashboard"} >
+                <Link to={"/"} >
                     <Button variant="subtle" size="md">
                         Take me back to home page
                     </Button>
