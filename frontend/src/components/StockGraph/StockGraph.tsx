@@ -22,8 +22,7 @@ const StockGraph = () => {
     const maxClose = Math.max(...closeValues);
 
     const minDomain = Math.floor(minClose / 5) * 5;
-    //Add space for tooltop on top. TODO
-    const maxDomain = Math.ceil(maxClose / 5) * 5 + 5;
+    const maxDomain = Math.ceil(maxClose / 5) * 5;
 
     const tickCount = (maxDomain - minDomain) / 5 + 1;
 
@@ -48,8 +47,8 @@ const StockGraph = () => {
             <CartesianGrid opacity={0.3} vertical={false}/>
             <XAxis dataKey="date" tickFormatter={formatDateStringAxis} interval={40} tick={{fontSize: 12, fill: "#868e96"}} />
             <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
-            <Tooltip position={{y:25}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
-            <Line type="monotone" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
+            <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
+            <Line type="linear" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
         </LineChart>
     )
 }
