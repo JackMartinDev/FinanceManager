@@ -11,7 +11,6 @@ import {
     IconLogout,
     IconSwitchHorizontal,
 } from '@tabler/icons-react';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './Navbar.module.css';
 import { client } from '../../utils/axios';
 import { useAuth } from '../../context/AuthContext';
@@ -35,17 +34,17 @@ const NavbarLink = ({ icon: Icon, label, active, onClick }: NavbarLinkProps) => 
 }
 
 const mockdata = [
-    { icon: IconHome2, label: 'Home' },
-    { icon: IconGauge, label: 'Dashboard' },
-    { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-    { icon: IconCalendarStats, label: 'Releases' },
-    { icon: IconUser, label: 'Account' },
-    { icon: IconFingerprint, label: 'Security' },
-    { icon: IconSettings, label: 'Settings' },
+    { icon: IconHome2, label: 'Home', to: '/home' },
+    { icon: IconGauge, label: 'Dashboard', to: '/dashboard' },
+    { icon: IconDeviceDesktopAnalytics, label: 'Analytics', to: '/analytics/' },
+    { icon: IconCalendarStats, label: 'Releases', to: '/releases' },
+    { icon: IconUser, label: 'Account', to: '/account' },
+    { icon: IconFingerprint, label: 'Security', to: '/security' },
+    { icon: IconSettings, label: 'Settings', to: '/settings' },
 ];
 
 const Navbar = () => {
-    const [active, setActive] = useState(2);
+    const [active, setActive] = useState(1);
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -54,9 +53,14 @@ const Navbar = () => {
             {...link}
             key={link.label}
             active={index === active}
-            onClick={() => setActive(index)}
+            onClick={() => navigationHandler(index, link.to)}
         />
     ));
+
+    const navigationHandler = (index: number, to: string) => {
+        setActive(index);
+        navigate(to);
+    }
 
     const test = async() =>{
         try {
@@ -79,10 +83,6 @@ const Navbar = () => {
 
     return (
         <nav className={classes.navbar}>
-            <Center>
-                <MantineLogo type="mark" size={30} />
-            </Center>
-
             <div className={classes.navbarMain}>
                 <Stack justify="center" gap={0}>
                     {links}
@@ -90,10 +90,9 @@ const Navbar = () => {
             </div>
 
             <Stack justify="center" gap={0}>
-                <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
+                <NavbarLink icon={IconSwitchHorizontal} label="Change account" onClick={test}/>
                 <NavbarLink icon={IconLogout} onClick={logoutHandler} label="Logout" />
             </Stack>
-            <button onClick={test}>Test</button>
         </nav>
     );
 }
