@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, TooltipProps, XAxis, YAxis } from "recharts";
 import testData from "./tempData.json"
-import { useState } from "react";
 import { ActionIcon, Anchor, Box, Burger, Container, Group } from "@mantine/core";
-import classes from "./StockGraph.module.css"
+import classes from "./StockGraph.module.css";
 
 const formatDateStringAxis = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short' };
