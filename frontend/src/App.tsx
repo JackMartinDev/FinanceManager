@@ -19,7 +19,7 @@ function App() {
     const [isRefreshingSession, setIsRefreshingSession] = useState(true);
 
     const router = createBrowserRouter([
-        {"path":"/login", element: <LoginPage/>,errorElement: <ErrorPage/>},
+        {"path":"/login", element: <InvestmentsPage/>,errorElement: <ErrorPage/>},
         {"path": "/", element: <ProtectedRoute/>, errorElement: <ErrorPage/>, children:[
             {element: <RootPage/>, children:[
                 {index: true, element: <DashboardPage/>},

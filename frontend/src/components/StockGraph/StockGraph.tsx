@@ -3,7 +3,6 @@ import testData from "./tempData.json"
 import { useState } from "react";
 import { ActionIcon, Anchor, Box, Burger, Container, Group } from "@mantine/core";
 import classes from "./StockGraph.module.css"
-import { DoubleHeader } from "./test";
 
 const formatDateStringAxis = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short' };
@@ -24,20 +23,21 @@ const StockGraph = () => {
 
     const peroidOptions = ["1M", "3M", "6M", "1Y"];
 
-    const mainItems = peroidOptions.map((item, index) => (
-        <Anchor<'a'>
-            href={item}
-            key={item}
-            className={classes.mainLink}
-            data-active={index === active || undefined}
-            onClick={(event) => {
-                event.preventDefault();
-                setActive(index);
-            }}
-        >
-            {item}
-        </Anchor>
-    ));
+
+  const mainItems = peroidOptions.map((item, index) => (
+    <Anchor<'a'>
+      href={item}
+      key={item}
+      className={classes.mainLink}
+      data-active={index === active || undefined}
+      onClick={(event) => {
+        event.preventDefault();
+        setActive(index);
+      }}
+    >
+      {item}
+    </Anchor>
+  ));
 
     switch(active){
         case 0:
