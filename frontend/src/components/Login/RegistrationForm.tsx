@@ -1,4 +1,4 @@
-import { Anchor, Button, Checkbox, Group, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
+import { Anchor, Button, Checkbox, Group, Loader, PasswordInput, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { upperFirst } from "@mantine/hooks";
 
@@ -9,7 +9,7 @@ export type RegistrationFormValues = {
     terms: boolean,
 }
 
-const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler: (formValues: RegistrationFormValues)=>void, registrationError:boolean}) => {
+const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler: (formValues: RegistrationFormValues)=>void, registrationError:boolean, isSubmitting: boolean}) => {
     const form = useForm<RegistrationFormValues>({
         initialValues: {
             email: '',
@@ -67,7 +67,7 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
                     Don't have an account? Register
                 </Anchor>
                 <Button type="submit" radius="xl">
-                    {upperFirst("Register")}
+                    {props.isSubmitting ? <Loader type="dots" color="rgb(255, 255, 255)"/> : upperFirst("Register")}
                 </Button>
             </Group>
         </form>

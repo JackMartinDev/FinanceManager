@@ -1,4 +1,4 @@
-import { Anchor, Button, Group, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
+import { Anchor, Button, Group, Loader, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { upperFirst } from "@mantine/hooks";
 
@@ -7,7 +7,7 @@ export type LoginFormValues = {
     password: string
 }
 
-const LoginForm = (props: {typeChangeHandler: () => void, formSubmitHandler: (formValues:LoginFormValues) => void, loginError: boolean}) =>{
+const LoginForm = (props: {typeChangeHandler: () => void, formSubmitHandler: (formValues:LoginFormValues) => void, loginError: boolean, isSubmitting: boolean}) =>{
     const form = useForm({
         initialValues: {
             email: '',
@@ -18,6 +18,7 @@ const LoginForm = (props: {typeChangeHandler: () => void, formSubmitHandler: (fo
             password: (val) => (/^\s*\S.*$/.test(val) ? null : 'Password field must not be empty'),
         },
     });
+
     return(
         <form onSubmit={form.onSubmit((values) => props.formSubmitHandler(values))}>
             <Stack>
@@ -48,7 +49,7 @@ const LoginForm = (props: {typeChangeHandler: () => void, formSubmitHandler: (fo
                     Already have an account? Login
                 </Anchor>
                 <Button type="submit" radius="xl">
-                    {upperFirst("Login")}
+                    {props.isSubmitting ? <Loader type="dots" color="rgb(255, 255, 255)"/> : upperFirst("Login")}
                 </Button>
             </Group>
         </form>

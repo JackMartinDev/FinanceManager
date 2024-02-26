@@ -72,7 +72,6 @@ const LoginFormWrapper = (props: PaperProps) => {
                 <Text size="lg" fw={500}>
                     Welcome to your Financial Manager, {type} with
                 </Text>
-                {isSubmitting && <p>Submitting</p>}
 
                 <Group grow mb="md" mt="md">
                     <GoogleButton onClick={()=>{setButtonAvailableError(true)}} radius="xl">Google</GoogleButton>
@@ -84,8 +83,8 @@ const LoginFormWrapper = (props: PaperProps) => {
                 <Divider label="Or continue with email" labelPosition="center" my="lg" />
                 
                 {type === "login" 
-                    ? <LoginForm typeChangeHandler={typeChangeHandler} formSubmitHandler={formSubmitHandler} loginError={loginError}/> 
-                    : <RegistrationForm typeChangeHandler={typeChangeHandler} formSubmitHandler={formSubmitHandler} registrationError={registrationError}/>}
+                    ? <LoginForm typeChangeHandler={typeChangeHandler} formSubmitHandler={formSubmitHandler} loginError={loginError} isSubmitting={isSubmitting}/> 
+                    : <RegistrationForm typeChangeHandler={typeChangeHandler} formSubmitHandler={formSubmitHandler} registrationError={registrationError} isSubmitting={isSubmitting}/>}
 
             </Paper>
         </Center>
