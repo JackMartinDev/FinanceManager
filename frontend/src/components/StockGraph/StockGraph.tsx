@@ -24,20 +24,20 @@ const StockGraph = () => {
     const peroidOptions = ["1M", "3M", "6M", "1Y"];
 
 
-  const mainItems = peroidOptions.map((item, index) => (
-    <Anchor<'a'>
-      href={item}
-      key={item}
-      className={classes.mainLink}
-      data-active={index === active || undefined}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(index);
-      }}
-    >
-      {item}
-    </Anchor>
-  ));
+    const mainItems = peroidOptions.map((item, index) => (
+        <Anchor<'a'>
+            href={item}
+            key={item}
+            className={classes.mainLink}
+            data-active={index === active || undefined}
+            onClick={(event) => {
+                event.preventDefault();
+                setActive(index);
+            }}
+        >
+            {item}
+        </Anchor>
+    ));
 
     switch(active){
         case 0:
@@ -65,6 +65,8 @@ const StockGraph = () => {
         return itemDate >= comparisonDate;
     });
 
+
+    //Maybe refactor into a function
     const closeValues = filteredData.map(item => item.IVV);
 
     const minClose = Math.min(...closeValues);
@@ -101,6 +103,7 @@ const StockGraph = () => {
                 </Box>
 
             <LineChart width={800} height={300} margin={{right:20}} data={filteredData}>
+                
                 <CartesianGrid opacity={0.3} vertical={false}/>
                 <XAxis dataKey="date" tickFormatter={formatDateStringAxis} interval={40} tick={{fontSize: 12, fill: "#868e96"}} />
                 <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
