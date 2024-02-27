@@ -12,11 +12,11 @@
     color: var(--mantine-color-gray-2);
 }
 
-.description {
+p.description {
     max-width: rem(500px);
-    margin: auto !important;
-    margin-top: var(--mantine-spacing-xl) !important;
-    margin-bottom: calc(1.5 * var(--mantine-spacing-xl)) !important;
+    margin: auto;
+    margin-top: var(--mantine-spacing-xl);
+    margin-bottom: calc(1.5 * var(--mantine-spacing-xl));
 }
 
 .title {
