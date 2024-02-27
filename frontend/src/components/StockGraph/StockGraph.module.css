@@ -1,13 +1,6 @@
-.inner {
-    height: rem(84px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .links {
     padding-top: var(--mantine-spacing-lg);
-    height: rem(84px);
+    padding-bottom: var(--mantine-spacing-sm);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -35,6 +28,6 @@ a.mainLink {
 
     &[data-active] {
         color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-        border-bottom-color: var(--mantine-color-blue-6);
+        border-bottom-color: #228AE5;
     }
 }

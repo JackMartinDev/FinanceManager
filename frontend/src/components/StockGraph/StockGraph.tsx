@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, TooltipProps, XAxis, YAxis } from "recharts";
 import testData from "./tempData.json"
-import { ActionIcon, Anchor, Box, Burger, Container, Group } from "@mantine/core";
+import { Anchor, Box, Container, Group } from "@mantine/core";
 import classes from "./StockGraph.module.css";
 
 const formatDateStringAxis = (dateString: string) => {
@@ -93,14 +93,12 @@ const StockGraph = () => {
     };
 
     return(
-        <>
-            <Container className={classes.inner}>
+            <Container w={800}>
                 <Box className={classes.links}>
                     <Group gap={0} justify="flex-end" className={classes.mainLinks}>
                         {mainItems}
                     </Group>
                 </Box>
-            </Container>
 
             <LineChart width={800} height={300} margin={{right:20}} data={filteredData}>
                 <CartesianGrid opacity={0.3} vertical={false}/>
@@ -109,7 +107,7 @@ const StockGraph = () => {
                 <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
                 <Line type="linear" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
             </LineChart>
-        </>
+        </Container>
     )
 }
 
