@@ -5,21 +5,24 @@ import { Anchor, Box, Container, Flex, Group, Text, Title } from "@mantine/core"
 import classes from "./StockGraph.module.css";
 import CustomTooltip from "./CustomTooltip";
 
-const formatDateStringAxis = (dateString: string) => {
+
+//change these names lmao
+const formatXAxis = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short' };
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
 }
 
-const formatDateStringTooltip = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: '2-digit' };
+const formatXAxis2 = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', options).replace(',','');
+    return date.toLocaleDateString('en-US', options);
 }
+
 
 const parseData = (active: number) => {
     const comparisonDate = new Date();
-    const parsedData = testData.map(data => ({date: formatDateStringTooltip(data.date), IVV: data.close}))
+    const parsedData = testData.map(data => ({date: data.date, IVV: data.close}))
 
     switch(active){
         case 0:
@@ -39,10 +42,58 @@ const parseData = (active: number) => {
     }
 
     const filteredData = parsedData.filter(item => {
-        const itemDate = new Date(item.date);
+        const itemDate = new Date((item.date));
         return itemDate >= comparisonDate;
     });
     return filteredData
+}
+
+
+const generateTicks = (data: {date: string, IVV: number}[], active: number) => {
+    const dates = data.map(object => object.date);
+    let ticks;
+    dates.shift();
+    dates.pop();
+
+    const firstDateForEachMonth: string[] = dates.reduce((acc: string[], cur: string) => {
+        // Extract the month and year from the current date
+        const [year, month] = cur.split('-');
+        const monthKey = `${year}-${month}`;
+
+        // Check if we already have an entry for this month
+        const lastEntryMonthKey = acc.length > 0 ? acc[acc.length - 1].split('-').slice(0, 2).join('-') : '';
+
+        // If the last entry in the accumulator is not from the current month, add the current date string
+        if (monthKey !== lastEntryMonthKey) {
+            acc.push(cur);
+        }
+
+        return acc;
+    }, []);
+
+    switch(active){
+        case 0:
+            ticks = dates.filter((_,index) => {
+                return index % 4 === 0;
+            });
+            break;
+        case 1:
+            ticks = dates.filter((_,index) => {
+                return index % 10 === 0;
+            });
+            break;
+        case 2:
+            ticks = firstDateForEachMonth;
+            break;
+        case 3:
+            ticks = firstDateForEachMonth.filter((_,index) => {
+                return index % 2 === 0;
+            });
+            ticks.shift();
+            break;
+        default:
+    }
+    return ticks
 }
 
 
@@ -66,8 +117,9 @@ const StockGraph = () => {
         </Anchor>
     ));
 
-
     const filteredData = parseData(active);
+    const ticks = generateTicks(filteredData, active);
+
 
     //Maybe refactor into a function
     //base this off the selected peroid
@@ -75,13 +127,6 @@ const StockGraph = () => {
     const yesterdayClose = closeValues.pop();
     const gain = yesterdayClose! - closeValues[0];
     const gainPercentage = (yesterdayClose! / closeValues[0] - 1) * 100
-    console.log(gainPercentage)
-
-    if(yesterdayClose){
-        console.log(closeValues[0] * IVVStockAmount);
-        console.log(yesterdayClose * IVVStockAmount);
-    }
-    console.log(closeValues)
 
     const minClose = Math.min(...closeValues);
     const maxClose = Math.max(...closeValues);
@@ -91,7 +136,6 @@ const StockGraph = () => {
 
     //Have these values also determined by the selected peroid state. 
     const tickCount = (maxDomain - minDomain) / 5 + 1;
-
 
     return(
 
@@ -116,9 +160,8 @@ const StockGraph = () => {
                 </Box>
 
                 <LineChart width={800} height={300} margin={{right:20}} data={filteredData}>
-
                     <CartesianGrid opacity={0.3} vertical={false}/>
-                    <XAxis dataKey="date" tickFormatter={formatDateStringAxis} interval={40} tick={{fontSize: 12, fill: "#868e96"}} />
+                    <XAxis dataKey="date" tickFormatter={active > 1 ? formatXAxis : formatXAxis2}  ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
                     <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
                     <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
                     <Line type="linear" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
