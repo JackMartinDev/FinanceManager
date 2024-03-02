@@ -103,22 +103,38 @@ const StockGraph = () => {
     const filteredData = parseData(active);
     const ticks = generateTicks(filteredData, active);
 
-
-    //Maybe refactor into a function
-    //base this off the selected peroid
     const closeValues = filteredData.map(item => item.IVV);
-    const yesterdayClose = closeValues.pop();
+    const yesterdayClose = closeValues[closeValues.length -1];
     const gain = yesterdayClose! - closeValues[0];
     const gainPercentage = (yesterdayClose! / closeValues[0] - 1) * 100
 
     const minClose = Math.min(...closeValues);
     const maxClose = Math.max(...closeValues);
 
-    const minDomain = Math.floor(minClose / 5) * 5;
-    const maxDomain = Math.ceil(maxClose / 5) * 5;
+    const range = Math.ceil(maxClose - minClose);
 
-    //Have these values also determined by the selected peroid state. 
-    const tickCount = (maxDomain - minDomain) / 5 + 1;
+    let interval;
+    let tickCount;
+
+    if(range >= 10) {
+        interval = 5;
+        tickCount = 5;
+    } else if(range >= 8) {
+        interval = 5;
+        tickCount = 4;
+    } else if(range >= 6) {
+        interval = 2;
+        tickCount = 5;
+    } else if(range >= 1) {
+        interval = 1;
+        tickCount = 6;
+    } else{
+        interval = 5;
+        tickCount = 6;
+    }
+
+    const minDomain = Math.floor(minClose / interval) * interval;
+    const maxDomain = Math.ceil(maxClose / interval) * interval;
 
     const formatXAxis = (dateString: string) => {
         const options: Intl.DateTimeFormatOptions = active > 1 ? { year: 'numeric', month: 'short' } : {month: "short", day: "numeric"};
@@ -149,7 +165,7 @@ const StockGraph = () => {
 
             <LineChart width={800} height={300} margin={{right:20}} data={filteredData}>
                 <CartesianGrid opacity={0.3} vertical={false}/>
-                <XAxis dataKey="date" tickFormatter={formatXAxis}  ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
+                <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
                 <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
                 <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
                 <Line type="linear" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
