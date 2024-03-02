@@ -5,21 +5,6 @@ import { Anchor, Box, Container, Flex, Group, Text, Title } from "@mantine/core"
 import classes from "./StockGraph.module.css";
 import CustomTooltip from "./CustomTooltip";
 
-
-//change these names lmao
-const formatXAxis = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', options);
-}
-
-const formatXAxis2 = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', options);
-}
-
-
 const parseData = (active: number) => {
     const comparisonDate = new Date();
     const parsedData = testData.map(data => ({date: data.date, IVV: data.close}))
@@ -47,7 +32,6 @@ const parseData = (active: number) => {
     });
     return filteredData
 }
-
 
 const generateTicks = (data: {date: string, IVV: number}[], active: number) => {
     const dates = data.map(object => object.date);
@@ -96,7 +80,6 @@ const generateTicks = (data: {date: string, IVV: number}[], active: number) => {
     return ticks
 }
 
-
 const StockGraph = () => {
     const [active, setActive] = useState(3);
     const peroidOptions = ["1M", "3M", "6M", "1Y"];
@@ -137,9 +120,14 @@ const StockGraph = () => {
     //Have these values also determined by the selected peroid state. 
     const tickCount = (maxDomain - minDomain) / 5 + 1;
 
-    return(
+    const formatXAxis = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = active > 1 ? { year: 'numeric', month: 'short' } : {month: "short", day: "numeric"};
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', options);
+    }
 
-            <Container w={800}>
+    return(
+        <Container w={800}>
             <Flex
                 justify="flex-start"
                 align="flex-end"
@@ -149,24 +137,24 @@ const StockGraph = () => {
                 <Title style={{fontWeight:600}}>{yesterdayClose}<span style={{fontSize: '16px', fontWeight: 400}}>AUD</span></Title>
 
                 {Math.sign(gain) === 1 
-                ? <Text style={{color: 'green'}}>{`+${gain.toFixed(2)} (${gainPercentage.toFixed(2)}%)`}</Text>
-                : <Text style={{color: 'red'}}>{`${gain.toFixed(2)} (${gainPercentage.toFixed(2)}%)`} </Text>}
+                    ? <Text style={{color: 'green'}}>{`+${gain.toFixed(2)} (${gainPercentage.toFixed(2)}%)`}</Text>
+                    : <Text style={{color: 'red'}}>{`${gain.toFixed(2)} (${gainPercentage.toFixed(2)}%)`} </Text>}
 
             </Flex>
-                <Box className={classes.links}>
-                    <Group gap={0} justify="flex-end" className={classes.mainLinks}>
-                        {peroidButtons}
-                    </Group>
-                </Box>
+            <Box className={classes.links}>
+                <Group gap={0} justify="flex-end" className={classes.mainLinks}>
+                    {peroidButtons}
+                </Group>
+            </Box>
 
-                <LineChart width={800} height={300} margin={{right:20}} data={filteredData}>
-                    <CartesianGrid opacity={0.3} vertical={false}/>
-                    <XAxis dataKey="date" tickFormatter={active > 1 ? formatXAxis : formatXAxis2}  ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
-                    <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
-                    <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
-                    <Line type="linear" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
-                </LineChart>
-            </Container>
+            <LineChart width={800} height={300} margin={{right:20}} data={filteredData}>
+                <CartesianGrid opacity={0.3} vertical={false}/>
+                <XAxis dataKey="date" tickFormatter={formatXAxis}  ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
+                <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
+                <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
+                <Line type="linear" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
+            </LineChart>
+        </Container>
     )
 }
 
