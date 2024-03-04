@@ -162,8 +162,11 @@ const StockGraph = (props: GraphProps) => {
 
             </Flex>
             <Box className={classes.links}>
-                <Group gap={0} justify="flex-end" className={classes.mainLinks}>
-                    {peroidButtons}
+                <Group justify="space-between">
+                    <Title style={{fontWeight:600, marginLeft: 60}}>IVV</Title>
+                    <Group gap={0} justify="flex-end" className={classes.mainLinks}>
+                        {peroidButtons}
+                    </Group>
                 </Group>
             </Box>
 
