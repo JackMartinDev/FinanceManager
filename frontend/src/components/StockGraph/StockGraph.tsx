@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import testData from "./tempData.json"
 import { Anchor, Box, Container, Flex, Group, Text, Title } from "@mantine/core";
 import classes from "./StockGraph.module.css";
 import CustomTooltip from "./CustomTooltip";
 
-const parseData = (active: number) => {
+const parseData = (active: number, data: StockInfo) => {
     const comparisonDate = new Date();
-    const parsedData = testData.map(data => ({date: data.date, IVV: data.close}))
+    const parsedData = data.data.map(data => ({date: data.date, IVV: data.close}))
 
     switch(active){
         case 0:
@@ -80,14 +79,27 @@ const generateTicks = (data: {date: string, IVV: number}[], active: number) => {
     return ticks
 }
 
-type GraphProps = {
-    lineColor: string
+type StockInfo = {
+    stock: string; 
+    color: string;
+    data: { 
+    date: string; 
+    open: number; 
+    high: number; 
+    low: number; 
+    close: number; 
+    adjusted_close: number;
+    volume: number; 
+    }[]
 }
 
-const StockGraph = (props: GraphProps) => {
+type GraphProps = {
+    data: StockInfo
+}
+
+const StockGraph = ({data}: GraphProps) => {
     const [active, setActive] = useState(3);
     const peroidOptions = ["1M", "3M", "6M", "1Y"];
-    const IVVStockAmount = 201;
 
     const peroidButtons = peroidOptions.map((item, index) => (
         <Anchor<'a'>
@@ -104,7 +116,7 @@ const StockGraph = (props: GraphProps) => {
         </Anchor>
     ));
 
-    const filteredData = parseData(active);
+    const filteredData = parseData(active, data);
     const ticks = generateTicks(filteredData, active);
 
     const closeValues = filteredData.map(item => item.IVV);
@@ -120,8 +132,20 @@ const StockGraph = (props: GraphProps) => {
     let interval;
     let tickCount;
 
-    if(range >= 10) {
-        interval = 5;
+    //I would like to refactor this one day
+    if(range >= 40) {
+        interval = 20;
+        tickCount = 4;
+    } else if(range >= 20) {
+        interval = 10;
+        tickCount = 5;
+    }
+    else if(range >= 15) {
+        interval = 8;
+        tickCount = 5;
+    }
+    else if(range >= 10) {
+        interval = 4;
         tickCount = 5;
     } else if(range >= 8) {
         interval = 5;
@@ -163,7 +187,7 @@ const StockGraph = (props: GraphProps) => {
             </Flex>
             <Box className={classes.links}>
                 <Group justify="space-between">
-                    <Title style={{fontWeight:600, marginLeft: 60}}>IVV</Title>
+                    <Title style={{fontWeight:600, marginLeft: 60}}>{data.stock}</Title>
                     <Group gap={0} justify="flex-end" className={classes.mainLinks}>
                         {peroidButtons}
                     </Group>
@@ -175,7 +199,7 @@ const StockGraph = (props: GraphProps) => {
                 <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
                 <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
                 <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
-                <Line type="linear" dataKey="IVV" stroke={props.lineColor} strokeWidth={2} dot={false} />
+                <Line type="linear" dataKey="IVV" stroke={data.color} strokeWidth={2} dot={false} />
             </LineChart>
         </Container>
     )

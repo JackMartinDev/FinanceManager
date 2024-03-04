@@ -1,7 +1,8 @@
-import { Box, Flex, Grid, Group } from "@mantine/core"
+import { Box, Flex, Grid} from "@mantine/core"
 import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
+import testData from "./tempData.json"
 
 const data = [
   { name: 'IVV', value: 10558.53, color: '#009790' },
@@ -26,9 +27,9 @@ const InvestmentsPage = () => {
                 direction="row"
                 wrap="wrap"
             >
-                <StockGraph lineColor="#228AE5"/>
-                <StockGraph lineColor="#999790"/>
-                <StockGraph lineColor="#009790"/>
+                {testData.map(data => (
+                    <StockGraph key={data.stock} data={data}/>
+                ))}
             </Flex>
         </Box>
     )
