@@ -4,10 +4,18 @@ import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
 import testData from "./tempData.json"
 
-const data = [
-  { name: 'IVV', value: 10558.53, color: '#009790' },
-  { name: 'APPL', value: 2902.1, color: '#999790' },
-];
+interface Holdings {
+    [key: string]: number;
+}
+
+const closeValues = testData.map(item => ({stock: item.stock, value: item.data[item.data.length - 1].close, color: item.color}));
+
+const holdings:Holdings = {
+    IVV: 201,
+    AAPL: 27
+}
+
+const data = closeValues.map(item => ({name: item.stock, value: item.value * holdings[item.stock], color: item.color}))
 
 const InvestmentsPage = () => {
     return(
