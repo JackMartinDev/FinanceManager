@@ -8,7 +8,6 @@ const stockData = [
 //Add bold for final row
 
 const StockTable = () => {
-
     const rows = stockData.map((stock) => (
         <Table.Tr key={stock.code}>
             <Table.Td><ColorSwatch color={stock.color} size={15}/></Table.Td>

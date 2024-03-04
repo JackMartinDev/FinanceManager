@@ -80,7 +80,11 @@ const generateTicks = (data: {date: string, IVV: number}[], active: number) => {
     return ticks
 }
 
-const StockGraph = () => {
+type GraphProps = {
+    lineColor: string
+}
+
+const StockGraph = (props: GraphProps) => {
     const [active, setActive] = useState(3);
     const peroidOptions = ["1M", "3M", "6M", "1Y"];
     const IVVStockAmount = 201;
@@ -168,7 +172,7 @@ const StockGraph = () => {
                 <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
                 <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
                 <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
-                <Line type="linear" dataKey="IVV" stroke="#228AE5" strokeWidth={2} dot={false} />
+                <Line type="linear" dataKey="IVV" stroke={props.lineColor} strokeWidth={2} dot={false} />
             </LineChart>
         </Container>
     )
