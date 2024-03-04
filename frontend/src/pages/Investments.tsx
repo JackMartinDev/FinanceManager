@@ -1,4 +1,4 @@
-import { Grid, Group } from "@mantine/core"
+import { Box, Flex, Grid, Group } from "@mantine/core"
 import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
@@ -10,17 +10,27 @@ const data = [
 
 const InvestmentsPage = () => {
     return(
-        <>
-            <Group>
-                <StockChart data={data}/>
-                <StockTable/>
-            </Group>
-            <Grid>
-                <Grid.Col span={6}><StockGraph lineColor="#228AE5"/></Grid.Col>
-                <Grid.Col span={6}><StockGraph lineColor="#999790"/></Grid.Col>
-                <Grid.Col span={6}><StockGraph lineColor="#009790"/></Grid.Col>
+        <Box mx={125}>
+            <Grid mb={50}>
+                <Grid.Col span={4}>
+                    <StockChart data={data}/>
+                </Grid.Col>
+                <Grid.Col span={8}>
+                    <StockTable/>
+                </Grid.Col>
             </Grid>
-        </>
+            <Flex
+                gap="md"
+                justify="center"
+                align="center"
+                direction="row"
+                wrap="wrap"
+            >
+                <StockGraph lineColor="#228AE5"/>
+                <StockGraph lineColor="#999790"/>
+                <StockGraph lineColor="#009790"/>
+            </Flex>
+        </Box>
     )
 }
 

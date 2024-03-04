@@ -10,7 +10,7 @@ const RootPage = ():JSX.Element =>{
         <AppShell
             header={{height: 60}}   
             navbar={{width: 82, breakpoint: "sm"}}
-            padding="md"
+            padding="xl"
         >
             <AppShell.Header>
                 <Group h="100%" px="md">

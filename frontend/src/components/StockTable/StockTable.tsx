@@ -1,4 +1,4 @@
-import { Container, Table, ColorSwatch } from "@mantine/core"
+import { Container, Table, ColorSwatch, Box } from "@mantine/core"
 
 const stockData = [
     { code: "IVV", name: "S&P 500 ETF", avgPrice: 38.08, gainLoss: 2898.42, units: 201, price: 52.50, change: 0.23, value: 10550, color: "#009790"},
@@ -23,7 +23,6 @@ const StockTable = () => {
     ));
 
     return (
-        <Container w={1200} mb={50}>
             <Table>
                 <Table.Thead>
                     <Table.Tr>
@@ -40,7 +39,6 @@ const StockTable = () => {
                 </Table.Thead>
                 <Table.Tbody>{rows}</Table.Tbody>
             </Table>
-        </Container>
     );
 }
 

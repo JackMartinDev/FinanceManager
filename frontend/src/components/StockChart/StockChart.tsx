@@ -8,11 +8,11 @@ type Props = {
 
 const StockChart = ({data}: Props) => {
     return(
-        <Group align="start" gap={50}>
+        <Group align="start" gap={35}>
             <DonutChart data={data} withTooltip={false} chartLabel="Stock breakdown"/>
-            <Stack>
+            <Stack mt={10}>
                 {data.map((item) => (
-                    <Group>
+                    <Group key={item.name}>
                         <ColorSwatch color={item.color} size={15}/>
                         <Text>{`${item.name} ${formatAUD(item.value)}`}</Text>
                     </Group>))}

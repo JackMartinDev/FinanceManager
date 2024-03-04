@@ -147,7 +147,7 @@ const StockGraph = (props: GraphProps) => {
     }
 
     return(
-        <Container w={800}>
+        <Container w={700}>
             <Flex
                 justify="flex-start"
                 align="flex-end"
@@ -170,7 +170,7 @@ const StockGraph = (props: GraphProps) => {
                 </Group>
             </Box>
 
-            <LineChart width={800} height={300} margin={{right:20}} data={filteredData}>
+            <LineChart width={700} height={300} margin={{right:20}} data={filteredData}>
                 <CartesianGrid opacity={0.3} vertical={false}/>
                 <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
                 <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
