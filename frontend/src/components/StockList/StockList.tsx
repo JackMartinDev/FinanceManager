@@ -4,7 +4,7 @@ import { IconCurrencyDollar } from "@tabler/icons-react";
 
 const StockList = () => {
     const filteredData = testData.map(stock => `${stock.Code}: ${stock.Name}`);
-    const icon = <IconCurrencyDollar style={{ width: rem(16), height: rem(16) }}/>
+    const icon = <IconCurrencyDollar style={{ width: rem(16), height: rem(16), color: "#121212" }}/>
 
     return (
         <>
@@ -19,7 +19,7 @@ const StockList = () => {
                 mb="sm"
             />
             <Group justify="space-between" align="end" mb="md">
-                <NumberInput hideControls decimalScale={2} flex={1} label="Price" leftSection={icon}/>
+                <NumberInput thousandSeparator="," hideControls decimalScale={2} flex={1} label="Price" leftSection={icon}/>
                 <NumberInput allowDecimal={false} flex={1} label="Amount"/>
             </Group>
             <Flex justify="right">
