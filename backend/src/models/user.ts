@@ -22,7 +22,7 @@ export default class User {
         }
     }
 
-    static async fetchAll(): Promise<{result: User[] | null, error: any}> {
+    static async fetchAll(): Promise<{result: TUser[] | null, error: any}> {
         try {
             const users = await db.query("SELECT * FROM users");
             return {result: users.rows, error: null}
@@ -31,7 +31,7 @@ export default class User {
         }
     }
 
-    static async fetchById(id: string): Promise<{result: User | null, error: any}>{
+    static async fetchById(id: string): Promise<{result: TUser | null, error: any}>{
         try{
             const user = await db.query("SELECT * FROM user where id = $1", [id]);
             return {result: user.rows[0], error: null};

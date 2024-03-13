@@ -8,3 +8,14 @@ export type TUser = {
     createdAt?: string,
     updatedAt?: string
 }
+
+export type THolding = {
+    id: string,
+    code: string,
+    volume: number,
+    buyPrice: number,
+    color: string,
+    userId: string,
+    createdAt?: string,
+    updatedAt?: string
+}

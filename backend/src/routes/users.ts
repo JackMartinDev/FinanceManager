@@ -1,5 +1,5 @@
 import express from "express"
-import {getUsers, getUser, createUser, patchUser, deleteUser} from "../controllers/userController"
+import {getUsers, getUser, createUser, updateUser, deleteUser} from "../controllers/userController"
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.get("/:id", getUser)
 
 router.post("/", createUser);
 
-router.patch("/:id", patchUser);
+router.patch("/:id", updateUser);
 
 router.delete("/:id", deleteUser);
 
