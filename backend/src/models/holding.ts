@@ -19,7 +19,7 @@ export default class Holding {
     async update() {
         try {
             const updateHolding = await db.query(
-                "UPDATE holdings SET code=$1, volume=$2, buyPrice=$3, color=$4, updatedAt=$5 WHERE id=$6",
+                "UPDATE holdings SET code=$1, volume=$2, buy_price=$3, color=$4, modified_at=$5 WHERE id=$6",
                 [this.holding.code, this.holding.volume, this.holding.buyPrice, this.holding.color, new Date().toISOString(), this.holding.id]
             );
             return { result: updateHolding.rows[0], error: null };

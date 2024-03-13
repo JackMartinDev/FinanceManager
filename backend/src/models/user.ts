@@ -15,7 +15,7 @@ export default class User {
 
     async update() {
         try {
-            const updateUser = await db.query("UPDATE user SET username=$1, password=$2", [this.user.username, this.user.password]);
+            const updateUser = await db.query("UPDATE user SET username=$1, password=$2, modified_at=$3", [this.user.username, this.user.password, new Date().toISOString()]);
             return {result: updateUser.rows[0], error: null}
         } catch (error) {
            return {result: null, error}
