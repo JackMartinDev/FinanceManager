@@ -1,9 +1,10 @@
 import { Pool } from "pg"
 
+//Use .env variables here
 export const pool = new Pool({
     user: "postgres",
-    password: "password",
+    password: "pass",
     host: "localhost",
-    port: 5433,
+    port: 5432,
     database: "postgres"
 })

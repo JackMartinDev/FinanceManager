@@ -12,3 +12,18 @@ INSERT INTO test (client_jp, client_en, department_jp, department_en, client_off
 VALUES ('Client 1 jp', 'Client 1 en', 'Department 1 jp', 'Department 1 en', 'Client 1 Official jp', 'Client 1 Official en', 'Department Official Jp 1', 'Department Official En 1', 0, true, 'Sendai'
 );
 
+
+
+create table holdings(
+    id VARCHAR(100) PRIMARY KEY,
+    user_id VARCHAR(100) NOT NULL,
+    code VARCHAR(100),
+    volume INTEGER(100),
+    buy_price REAL(100),
+    color VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
