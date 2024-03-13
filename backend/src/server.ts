@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import userRoutes from "./routes/users"
 import authRoutes from "./routes/auth"
+import holdingRoutes from "./routes/holdings"
 import { checkAuthMiddleware } from './utils/auth';
 
 const app:Application = express();
@@ -28,10 +29,11 @@ app.use((req, _, next) => {
 app.use("/auth",authRoutes);
 
 //Prevent non logged in users from accessing content
-app.use(checkAuthMiddleware);
+//app.use(checkAuthMiddleware);
 
 app.use("/test", userRoutes);
 
+app.use("/holding", holdingRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
