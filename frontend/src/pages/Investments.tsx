@@ -3,7 +3,7 @@ import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
 import testData from "./tempData.json"
-import StockList from "../components/StockList/StockList";
+import AddStockModal from "../components/AddStockModal/AddStockModal";
 import { useDisclosure } from "@mantine/hooks";
 
 interface Holdings {
@@ -24,7 +24,7 @@ const InvestmentsPage = () => {
     return(     
         <>
             <Modal opened={opened} onClose={close} title="Add stock" centered>
-                <StockList/>
+                <AddStockModal close={close}/>
             </Modal>
             <Box mx={125}>
                 <Grid mb={50}>
