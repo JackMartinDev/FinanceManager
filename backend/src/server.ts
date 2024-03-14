@@ -29,7 +29,7 @@ app.use((req, _, next) => {
 app.use("/auth",authRoutes);
 
 //Prevent non logged in users from accessing content
-//app.use(checkAuthMiddleware);
+app.use(checkAuthMiddleware);
 
 app.use("/test", userRoutes);
 
