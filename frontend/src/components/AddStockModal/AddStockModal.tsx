@@ -6,6 +6,7 @@ import { useForm } from "@mantine/form";
 import { useAuth } from "../../context/AuthContext";
 import { client } from "../../utils/axios";
 import axios, { AxiosResponse } from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const colors = ['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
 
@@ -15,6 +16,17 @@ const AddStockModal = (props:{close: () => void}) => {
     const [selectedColor, setSelectedColor] = useState('#2e2e2e');
     const user = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const queryClient = useQueryClient()
+
+    const addStockMutation = useMutation({
+        mutationFn: (stock: {userId: string | undefined;code: string; buyPrice: string;volume: string;color: string;}) => {
+            return client.post(`holding/`, stock)
+        },
+        onSuccess: () => {
+            return queryClient.invalidateQueries({queryKey: ["holdings"]})
+        }
+    })
 
     const form = useForm({
         initialValues: {
@@ -53,8 +65,7 @@ const AddStockModal = (props:{close: () => void}) => {
         const postData = {...values, userId: user.user?.id}
         console.log(postData)
         try {
-            const response: AxiosResponse = await client.post("holding", postData);
-            console.log(response);
+            addStockMutation.mutate(postData)
             props.close();
         } catch (error) {
             if(axios.isAxiosError(error)){

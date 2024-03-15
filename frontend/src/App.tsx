@@ -14,6 +14,12 @@ import HomePage from "./pages/Home"
 import CalendarPage from "./pages/Calendar"
 import ProfilePage from "./pages/Profile"
 
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
 function App() {
     const { login } = useAuth();
     const [isRefreshingSession, setIsRefreshingSession] = useState(true);
@@ -58,9 +64,19 @@ function App() {
         )
     }
 
+    const queryClient = new QueryClient({defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+    })
+
     return (
         <>
-            <RouterProvider router={router}/>
+            <QueryClientProvider client={queryClient}>
+                <RouterProvider router={router}/>
+                <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
         </>
     )
 }

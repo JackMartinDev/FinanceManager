@@ -5,22 +5,50 @@ import StockChart from "../components/StockChart/StockChart";
 import testData from "./tempData.json"
 import AddStockModal from "../components/AddStockModal/AddStockModal";
 import { useDisclosure } from "@mantine/hooks";
+import { useAuth } from "../context/AuthContext";
+import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { client } from "../utils/axios";
+import axios from "axios";
 
-interface Holdings {
-    [key: string]: number;
-}
-
-const closeValues = testData.map(item => ({stock: item.stock, value: item.data[item.data.length - 1].close, color: item.color}));
-
-const holdings:Holdings = {
-    IVV: 201,
-    AAPL: 27
-}
-
-const data = closeValues.map(item => ({name: item.stock, value: item.value * holdings[item.stock], color: item.color}))
+const API_TOKEN = import.meta.env.VITE_STOCKS_API_TOKEN
 
 const InvestmentsPage = () => {
+    const {user} = useAuth();
     const [opened, { open, close }] = useDisclosure(false);
+    const queryClient = useQueryClient()
+
+
+    const { data: userHoldings} = useQuery<UserHolding[], Error, UserHolding[]>({
+        queryKey: ['holdings', user?.id], 
+        queryFn: () => client.get(`holding/${user?.id}`).then((res) => res.data),
+    });
+
+    const Stocks = useQueries({
+        queries: userHoldings 
+            ? userHoldings.map((holding) => {return {
+            queryKey: ['stock', holding.code],
+            queryFn: () => axios.get(`https://eodhd.com/api/eod/${holding.code}.AU?period=d&api_token=${API_TOKEN}&fmt=json`)
+                    .then((res)=> ({...holding, data: res.data})),
+            }
+        })
+        : [],
+    })
+
+    const allQueriesLoaded = Stocks.every((res) => !res.isLoading);
+
+    const holdingsData:HoldingsData = Stocks.reduce<HoldingsData>((acc, result) => {
+    if (!result.isError && result.data) {
+      acc.push(result.data);
+    }
+    return acc;
+  }, []);
+
+    if (!allQueriesLoaded) {
+    return <div>Loading...</div>; // or any other loading indicator
+  }
+//TODO make variable name match for buy price
+    const chartData = holdingsData.map(item => ({name: item.code, value: (item.volume * item.buy_price), color: item.color}))
+    console.log(chartData)
     return(     
         <>
             <Modal opened={opened} onClose={close} title="Add stock" centered>
@@ -29,7 +57,7 @@ const InvestmentsPage = () => {
             <Box mx={125}>
                 <Grid mb={50}>
                     <Grid.Col span={3}>
-                        <StockChart data={data}/>
+                        <StockChart data={chartData}/>
                     </Grid.Col>
                     <Grid.Col span={8}>
                         <StockTable/>

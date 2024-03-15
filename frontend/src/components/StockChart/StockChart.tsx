@@ -3,10 +3,11 @@ import { ColorSwatch, Group, Stack, Text } from "@mantine/core";
 import { formatAUD } from "../../utils/utils";
 
 type Props = {
-    data: { name: string; value: number; color: string; }[]
+    data: {name: string, value: number, color: string}[]
 }
 
 const StockChart = ({data}: Props) => {
+
     return(
         <Group align="start" gap={35}>
             <DonutChart data={data} withTooltip={false} chartLabel="Stock breakdown"/>
