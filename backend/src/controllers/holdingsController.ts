@@ -12,7 +12,7 @@ export const getHoldings = async(_: Request, res: Response) => {
 
 export const getHolding = async(req: Request, res: Response) => {
     const {id} = req.params;
-    const {result, error} = await Holding.fetchById(id);
+    const {result, error} = await Holding.fetchByUserId(id);
     if(error) {
         return res.status(500).json({error: "An error occurred"})
     }

@@ -46,10 +46,10 @@ export default class Holding {
         }
     }
 
-    static async fetchByUserId(userId: string): Promise<{ result: THolding | null, error: any }> {
+    static async fetchByUserId(userId: string): Promise<{ result: THolding[] | null, error: any }> {
         try {
             const holding = await db.query("SELECT * FROM holdings WHERE user_id = $1", [userId]);
-            return { result: holding.rows[0], error: null };
+            return { result: holding.rows, error: null };
         } catch (error) {
             return { result: null, error };
         }
