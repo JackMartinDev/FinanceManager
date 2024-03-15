@@ -3,22 +3,32 @@ import testData from "./stocklist.json"
 import { IconCurrencyDollar } from "@tabler/icons-react";
 import { useState } from "react";
 import { useForm } from "@mantine/form";
+import { useAuth } from "../../context/AuthContext";
+import { client } from "../../utils/axios";
+import axios, { AxiosResponse } from "axios";
+
+const colors = ['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
 
 const AddStockModal = (props:{close: () => void}) => {
     const testFilter = testData.map(stock => ({value: stock.Code, label: `${stock.Code}: ${stock.Name}`}));
     const icon = <IconCurrencyDollar style={{ width: rem(16), height: rem(16), color: "#121212" }}/>
-    const colors = ['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
     const [selectedColor, setSelectedColor] = useState('#2e2e2e');
+    const user = useAuth();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const form = useForm({
         initialValues: {
             code: '',
-            price: '',
+            buyPrice: '',
             volume: '',
             color: '#2e2e2e',
         },
                //Add validation 
         validate: {
+            code: (val) => (/^\s*\S+.*$/.test(val) ? null : 'Code is a required field'),
+            buyPrice: (val) => (/^\s*\S+.*$/.test(val) ? null : 'Price is a required field'),
+            volume: (val) => (/^\s*\S+.*$/.test(val) ? null : 'Volume is a required field'),
+            color: (val) => (/#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/i.test(val) ? null : 'Color must be a hexidecimal value'),
         },
     });
 
@@ -38,10 +48,27 @@ const AddStockModal = (props:{close: () => void}) => {
             {selectedColor === color && <CheckIcon style={{ width: rem(12), height: rem(12) }} />}
         </ColorSwatch>))
 
-    const onSubmitHandler = (values: typeof form.values) => {
-       console.log(values);
-        //post data before closing the dialog
-        props.close()
+    const onSubmitHandler = async(values: typeof form.values) => {
+        setIsSubmitting(true);
+        const postData = {...values, userId: user.user?.id}
+        console.log(postData)
+        try {
+            const response: AxiosResponse = await client.post("holding", postData);
+            console.log(response);
+            props.close();
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                switch(error.response?.status){
+                    default:
+                        console.log("An error has occured")
+                }
+            } else {
+                console.log(error);
+                // Handle non-Axios errors
+            }
+        } finally{
+            setIsSubmitting(false);
+        }
     }
 
     return (
@@ -56,6 +83,7 @@ const AddStockModal = (props:{close: () => void}) => {
                 searchable
                 withCheckIcon={false}
                 nothingFoundMessage="There are no stocks that match your search"
+                error={form.errors.code && "Code is a required field"}
                 mb="sm"
             />
             <Group justify="space-between" align="end" mb="md">
@@ -66,15 +94,18 @@ const AddStockModal = (props:{close: () => void}) => {
                     flex={1} 
                     label="Price" 
                     leftSection={icon}
-                    value={form.values.price}
-                    onChange={(value) => form.setFieldValue('price', value.toString())}
+                    value={form.values.buyPrice}
+                    error={form.errors.buyPrice && "Price is a required field"}
+                    onChange={(value) => form.setFieldValue('buyPrice', value.toString())}
 
                 />
                 <NumberInput 
                     allowDecimal={false} 
                     flex={1} 
                     label="Volume"
+                    placeholder="Units"
                     value={form.values.volume}
+                    error={form.errors.volume && "Volume is a required field"}
                     onChange={(value) => form.setFieldValue('volume', value.toString())}
                 />
             </Group>
