@@ -25,9 +25,10 @@ export const getHolding = async(req: Request, res: Response) => {
 
 export const createHolding = async(req: Request<{}, {}, THolding>, res: Response) => {
     // Add some validation here
-    const { code, volume, buyPrice, color, userId } = req.body;
+    const { code, name, color, volume, buyPrice, userId } = req.body;
+
     const id = crypto.randomUUID();
-    const holding = new Holding({ id, code, volume, buyPrice, color, userId});
+    const holding = new Holding({ id, code, name, volume, buyPrice, color, userId});
     const {result, error} = await holding.create();
     if(error) {
         return res.status(500).json({error: "An error occurred"});

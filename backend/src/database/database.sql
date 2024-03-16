@@ -18,6 +18,7 @@ create table holdings(
     id VARCHAR(100) PRIMARY KEY,
     user_id VARCHAR(100) NOT NULL,
     code VARCHAR(100),
+    name VARCHAR(100),
     volume INTEGER(100),
     buy_price REAL(100),
     color VARCHAR(100),

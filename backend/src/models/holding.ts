@@ -7,8 +7,8 @@ export default class Holding {
     async create() {
         try {
             const newHolding = await db.query(
-                "INSERT INTO holdings (id, code, volume, buy_price, color, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-                [this.holding.id, this.holding.code, this.holding.volume, this.holding.buyPrice, this.holding.color, this.holding.userId]
+                "INSERT INTO holdings (id, code, name, volume, buy_price, color, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+                [this.holding.id, this.holding.code, this.holding.name,this.holding.volume, this.holding.buyPrice, this.holding.color, this.holding.userId]
             );
             return { result: newHolding.rows[0], error: null };
         } catch (error) {
@@ -19,8 +19,8 @@ export default class Holding {
     async update() {
         try {
             const updateHolding = await db.query(
-                "UPDATE holdings SET code=$1, volume=$2, buy_price=$3, color=$4, modified_at=$5 WHERE id=$6",
-                [this.holding.code, this.holding.volume, this.holding.buyPrice, this.holding.color, new Date().toISOString(), this.holding.id]
+                "UPDATE holdings SET code=$1, volume=$2, name=$3, buy_price=$4, color=$5, modified_at=$6 WHERE id=$7",
+                [this.holding.code, this.holding.volume, this.holding.name, this.holding.buyPrice, this.holding.color, new Date().toISOString(), this.holding.id]
             );
             return { result: updateHolding.rows[0], error: null };
         } catch (error) {

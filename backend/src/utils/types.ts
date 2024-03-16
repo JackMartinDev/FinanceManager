@@ -12,6 +12,7 @@ export type TUser = {
 export type THolding = {
     id: string,
     code: string,
+    name: string,
     volume: number,
     buyPrice: number,
     color: string,
