@@ -11,7 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const colors = ['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
 
 const AddStockModal = (props:{close: () => void}) => {
-    const testFilter = testData.map(stock => ({value: stock.Code, label: `${stock.Code}: ${stock.Name}`}));
+    const testFilter = testData.map(stock => ({value: `${stock.Code}: ${stock.Name}`, label: `${stock.Code}: ${stock.Name}`}));
     const icon = <IconCurrencyDollar style={{ width: rem(16), height: rem(16), color: "#121212" }}/>
     const [selectedColor, setSelectedColor] = useState('#2e2e2e');
     const user = useAuth();
@@ -20,7 +20,7 @@ const AddStockModal = (props:{close: () => void}) => {
     const queryClient = useQueryClient()
 
     const addStockMutation = useMutation({
-        mutationFn: (stock: {userId: string | undefined;code: string; buyPrice: string;volume: string;color: string;}) => {
+        mutationFn: (stock: {userId: string | undefined; code: string; name:string; buyPrice: string;volume: string;color: string;}) => {
             return client.post(`holding/`, stock)
         },
         onSuccess: () => {
@@ -62,7 +62,9 @@ const AddStockModal = (props:{close: () => void}) => {
 
     const onSubmitHandler = async(values: typeof form.values) => {
         setIsSubmitting(true);
-        const postData = {...values, userId: user.user?.id}
+        const {color, volume, buyPrice} = values;
+        const [code, name] = values.code.split(":");
+        const postData = {code, name, color, volume, buyPrice, userId: user.user?.id}
         console.log(postData)
         try {
             addStockMutation.mutate(postData)

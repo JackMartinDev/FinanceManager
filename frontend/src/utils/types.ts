@@ -2,6 +2,7 @@
 type UserHolding = {
     id: string,
     code: string,
+    name: string,
     volume: number,
     buyPrice: number,
     color: string
@@ -20,6 +21,7 @@ type StockData = {
 type StockInfo = {
     id: string,
     code: string,
+    name: string,
     volume: number,
     buyPrice: number,
     color: string,
