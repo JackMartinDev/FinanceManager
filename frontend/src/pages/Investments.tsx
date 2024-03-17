@@ -2,7 +2,6 @@ import { Box, Button, Flex, Grid, Modal} from "@mantine/core"
 import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
-import testData from "./tempData.json"
 import AddStockModal from "../components/AddStockModal/AddStockModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useAuth } from "../context/AuthContext";
@@ -27,30 +26,28 @@ const InvestmentsPage = () => {
     const Stocks = useQueries({
         queries: userHoldings 
             ? userHoldings.map((holding) => {return {
-            queryKey: ['stock', holding.code],
-            queryFn: () => axios.get(`https://eodhd.com/api/eod/${holding.code}.AU?period=d&api_token=${API_TOKEN}&fmt=json`)
+                queryKey: ['stock', holding.code],
+                queryFn: () => axios.get(`https://eodhd.com/api/eod/${holding.code}.AU?period=d&api_token=${API_TOKEN}&fmt=json`)
                     .then((res)=> ({...holding, data: res.data})),
             }
-        })
-        : [],
+            })
+            : [],
     })
 
     const allQueriesLoaded = Stocks.every((res) => !res.isLoading);
 
+    //TODO BUG: stock does not refresh when the user has not holdings.
     const holdingsData:HoldingsData = Stocks.reduce<HoldingsData>((acc, result) => {
-    if (!result.isError && result.data) {
-      acc.push(result.data);
-    }
-    return acc;
-  }, []);
+        if (!result.isError && result.data) {
+            acc.push(result.data);
+        }
+        return acc;
+    }, []);
 
     if (!allQueriesLoaded) {
-    return <div>Loading...</div>; // or any other loading indicator
-  }
+        return <div>Loading...</div>; // or any other loading indicator
+    }
 
-    const closeValues = holdingsData.map(item => item.data?.map(data => data.close));
-
-    //get close values
     const chartData = holdingsData.map(item => ({name: item.code, volume: item.volume, data: item.data, color: item.color}))
     const graphData = holdingsData.map(item => ({stock: item.code, color: item.color, data: item.data}))
     const tableData = holdingsData.map(item => ({code: item.code, name: item.name, avgPrice: item.buyPrice, volume: item.volume, data: item.data, color: item.color}))

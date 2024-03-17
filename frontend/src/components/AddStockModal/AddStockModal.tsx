@@ -24,7 +24,8 @@ const AddStockModal = (props:{close: () => void}) => {
             return client.post(`holding/`, stock)
         },
         onSuccess: () => {
-            return queryClient.invalidateQueries({queryKey: ["holdings"]})
+            queryClient.invalidateQueries({queryKey: ["holdings"]})
+            queryClient.invalidateQueries({queryKey: ["stock"]})
         }
     })
 
