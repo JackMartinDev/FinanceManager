@@ -9,6 +9,7 @@ import { useAuth } from "../context/AuthContext";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "../utils/axios";
 import axios from "axios";
+import camelcaseKeys from 'camelcase-keys';
 
 const API_TOKEN = import.meta.env.VITE_STOCKS_API_TOKEN
 
@@ -17,10 +18,10 @@ const InvestmentsPage = () => {
     const [opened, { open, close }] = useDisclosure(false);
     const queryClient = useQueryClient()
 
-
     const { data: userHoldings} = useQuery<UserHolding[], Error, UserHolding[]>({
         queryKey: ['holdings', user?.id], 
         queryFn: () => client.get(`holding/${user?.id}`).then((res) => res.data),
+        select: (data) => data.map(item => camelcaseKeys(item))
     });
 
     const Stocks = useQueries({
@@ -47,7 +48,7 @@ const InvestmentsPage = () => {
     return <div>Loading...</div>; // or any other loading indicator
   }
 //TODO make variable name match for buy price
-    const chartData = holdingsData.map(item => ({name: item.code, value: (item.volume * item.buy_price), color: item.color}))
+    const chartData = holdingsData.map(item => ({name: item.code, value: (item.volume * item.buyPrice), color: item.color}))
     console.log(chartData)
     return(     
         <>
