@@ -1,4 +1,5 @@
 import { Container, Table, ColorSwatch, Box } from "@mantine/core"
+import { formatAUD } from "../../utils/utils";
 
 const stockData = [
     { code: "IVV", name: "S&P 500 ETF", avgPrice: 38.08, gainLoss: 2898.42, units: 201, price: 52.50, change: 0.23, value: 10550, color: "#009790"},
@@ -6,19 +7,33 @@ const stockData = [
     { code: null, name: "Total", avgPrice: null, gainLoss: 9000, units: null, price: null, change: 0.01, value: 101, color: "#228AE5" },
 ];
 //Add bold for final row
+//
+//
+type Stocks = {
+    code: string;
+    name: string;
+    avgPrice: number;
+    volume: number;
+    data: StockData | undefined;
+    color: string;
+}
 
-const StockTable = () => {
-    const rows = stockData.map((stock) => (
+type Props = {
+    data: Stocks[]
+}
+const StockTable = ({data}: Props) => {
+    const rows = data.map((stock) => (
+        
         <Table.Tr key={stock.code}>
             <Table.Td><ColorSwatch color={stock.color} size={15}/></Table.Td>
             <Table.Td>{stock.code}</Table.Td>
             <Table.Td>{stock.name}</Table.Td>
             <Table.Td>{stock.avgPrice}</Table.Td>
-            <Table.Td>{stock.gainLoss}</Table.Td>
-            <Table.Td>{stock.units}</Table.Td>
-            <Table.Td>{stock.price}</Table.Td>
-            <Table.Td>{stock.change}</Table.Td>
-            <Table.Td>{stock.value}</Table.Td>
+            <Table.Td>{((stock.data![stock.data!.length -1].close - stock.avgPrice) * stock.volume).toFixed(2)}</Table.Td>
+            <Table.Td>{stock.volume}</Table.Td>
+            <Table.Td>{stock.data![stock.data!.length -1].close}</Table.Td>
+            <Table.Td>{(stock.data![stock.data!.length -1].close - stock.data![stock.data!.length -2].close).toFixed(2)}</Table.Td>
+            <Table.Td>{stock.volume * stock.data![stock.data!.length -1].close}</Table.Td>
         </Table.Tr>
     ));
 

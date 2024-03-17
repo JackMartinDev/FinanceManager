@@ -47,9 +47,14 @@ const InvestmentsPage = () => {
     if (!allQueriesLoaded) {
     return <div>Loading...</div>; // or any other loading indicator
   }
-//TODO make variable name match for buy price
-    const chartData = holdingsData.map(item => ({name: item.code, value: (item.volume * item.buyPrice), color: item.color}))
-    console.log(chartData)
+
+    const closeValues = holdingsData.map(item => item.data?.map(data => data.close));
+
+    //get close values
+    const chartData = holdingsData.map(item => ({name: item.code, volume: item.volume, data: item.data, color: item.color}))
+    const graphData = holdingsData.map(item => ({stock: item.code, color: item.color, data: item.data}))
+    const tableData = holdingsData.map(item => ({code: item.code, name: item.name, avgPrice: item.buyPrice, volume: item.volume, data: item.data, color: item.color}))
+
     return(     
         <>
             <Modal opened={opened} onClose={close} title="Add stock" centered>
@@ -61,7 +66,7 @@ const InvestmentsPage = () => {
                         <StockChart data={chartData}/>
                     </Grid.Col>
                     <Grid.Col span={8}>
-                        <StockTable/>
+                        <StockTable data={tableData}/>
                     </Grid.Col>
                     <Grid.Col span={1}>
                         <Button onClick={open}>Add stock</Button>
@@ -74,7 +79,7 @@ const InvestmentsPage = () => {
                     direction="row"
                     wrap="wrap"
                 >
-                    {testData.map(data => (
+                    {graphData.map(data => (
                         <StockGraph key={data.stock} data={data}/>
                     ))}
                 </Flex>

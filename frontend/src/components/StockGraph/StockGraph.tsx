@@ -6,7 +6,7 @@ import CustomTooltip from "./CustomTooltip";
 
 const parseData = (active: number, data: StockInfo) => {
     const comparisonDate = new Date();
-    const parsedData = data.data.map(data => ({date: data.date, IVV: data.close}))
+    const parsedData = data.data!.map(data => ({date: data.date, close: data.close}))
 
     switch(active){
         case 0:
@@ -32,7 +32,7 @@ const parseData = (active: number, data: StockInfo) => {
     return filteredData
 }
 
-const generateTicks = (data: {date: string, IVV: number}[], active: number) => {
+const generateTicks = (data: {date: string, close: number}[], active: number) => {
     const dates = data.map(object => object.date);
     let ticks;
     dates.shift();
@@ -82,15 +82,7 @@ const generateTicks = (data: {date: string, IVV: number}[], active: number) => {
 type StockInfo = {
     stock: string; 
     color: string;
-    data: { 
-    date: string; 
-    open: number; 
-    high: number; 
-    low: number; 
-    close: number; 
-    adjusted_close: number;
-    volume: number; 
-    }[]
+    data?: StockData
 }
 
 type GraphProps = {
@@ -119,7 +111,7 @@ const StockGraph = ({data}: GraphProps) => {
     const filteredData = parseData(active, data);
     const ticks = generateTicks(filteredData, active);
 
-    const closeValues = filteredData.map(item => item.IVV);
+    const closeValues = filteredData.map(item => item.close);
     const yesterdayClose = closeValues[closeValues.length -1];
     const gain = yesterdayClose! - closeValues[0];
     const gainPercentage = (yesterdayClose! / closeValues[0] - 1) * 100
@@ -199,7 +191,7 @@ const StockGraph = ({data}: GraphProps) => {
                 <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
                 <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
                 <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
-                <Line type="linear" dataKey="IVV" stroke={data.color} strokeWidth={2} dot={false} />
+                <Line type="linear" dataKey="close" stroke={data.color} strokeWidth={2} dot={false} />
             </LineChart>
         </Container>
     )
