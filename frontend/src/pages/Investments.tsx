@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Grid, Modal} from "@mantine/core"
+import { Box, Button, Flex, Grid, Modal, Skeleton} from "@mantine/core"
 import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
@@ -43,9 +43,9 @@ const InvestmentsPage = () => {
         return acc;
     }, []);
 
-    if (!allQueriesLoaded) {
-        return <div>Loading...</div>; // or any other loading indicator
-    }
+//    if (!allQueriesLoaded) {
+//        return <div>Loading...</div>; // or any other loading indicator
+//    }
 
     const chartData = holdingsData.map(item => ({name: item.code, volume: item.volume, data: item.data, color: item.color}))
     const graphData = holdingsData.map(item => ({stock: item.code, color: item.color, data: item.data}))
@@ -58,14 +58,16 @@ const InvestmentsPage = () => {
             </Modal>
 
             <Box mx={125}>
-                <Grid mb={50}>
-                    <Grid.Col span={3}>
-                        <StockChart data={chartData}/>
-                    </Grid.Col>
-                    <Grid.Col span={9}>
-                        <StockTable data={tableData}/>
-                    </Grid.Col>
-                </Grid>
+                <Skeleton visible={!allQueriesLoaded}>
+                    <Grid mb={50}>
+                        <Grid.Col span={3}>
+                            <StockChart data={chartData}/>
+                        </Grid.Col>
+                        <Grid.Col span={9}>
+                            <StockTable data={tableData}/>
+                        </Grid.Col>
+                    </Grid>
+                </Skeleton>
                 <Button onClick={open}>Add stock</Button>
                 <Flex
                     gap="md"
@@ -77,6 +79,7 @@ const InvestmentsPage = () => {
                     {graphData.map(data => (
                         <StockGraph key={data.stock} data={data}/>
                     ))}
+
                 </Flex>
             </Box>
         </>

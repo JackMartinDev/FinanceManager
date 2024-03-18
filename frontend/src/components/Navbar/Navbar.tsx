@@ -14,7 +14,7 @@ import {
 import classes from './Navbar.module.css';
 import { client } from '../../utils/axios';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 interface NavbarLinkProps {
     icon: typeof IconHome2;
@@ -44,21 +44,22 @@ const mockdata = [
 ];
 
 const Navbar = () => {
-    const [active, setActive] = useState(1);
+    const url = useLocation();
+    const [active, setActive] = useState(url.pathname);
     const { logout } = useAuth();
     const navigate = useNavigate();
 
-    const links = mockdata.map((link, index) => (
+    const links = mockdata.map((link) => (
         <NavbarLink
             {...link}
             key={link.label}
-            active={index === active}
-            onClick={() => navigationHandler(index, link.to)}
+            active={link.to === active}
+            onClick={() => navigationHandler(link.to)}
         />
     ));
 
-    const navigationHandler = (index: number, to: string) => {
-        setActive(index);
+    const navigationHandler = (to: string) => {
+        setActive(to);
         navigate(to);
     }
 
