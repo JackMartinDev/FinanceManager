@@ -44,7 +44,7 @@ const InvestmentsPage = () => {
     }, []);
 
 
-
+    //TODO: Find a work around for the inital loading display when no user holdings
     if( userHoldings?.length === 0 && !isLoading) {
         return (
             <div>
@@ -66,7 +66,7 @@ const InvestmentsPage = () => {
                 <AddStockModal close={close}/>
             </Modal>
 
-            <Box mx={125}>
+            <Box mx={50}>
                 <LoadingOverlay
                     visible={isLoading || isFetching || !allQueriesLoaded}
                     zIndex={1000}

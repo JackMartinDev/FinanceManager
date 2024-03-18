@@ -1,14 +1,5 @@
-import { Container, Table, ColorSwatch, Box } from "@mantine/core"
-import { formatAUD } from "../../utils/utils";
+import { Table, ColorSwatch } from "@mantine/core"
 
-const stockData = [
-    { code: "IVV", name: "S&P 500 ETF", avgPrice: 38.08, gainLoss: 2898.42, units: 201, price: 52.50, change: 0.23, value: 10550, color: "#009790"},
-    { code: "APPL", name: "Apple", avgPrice: 109, gainLoss: 1.42, units: 1, price: 111.50, change: 0.01, value: 101, color: "#999790"},
-    { code: null, name: "Total", avgPrice: null, gainLoss: 9000, units: null, price: null, change: 0.01, value: 101, color: "#228AE5" },
-];
-//Add bold for final row
-//
-//
 type Stocks = {
     code: string;
     name: string;
@@ -22,20 +13,34 @@ type Props = {
     data: Stocks[]
 }
 const StockTable = ({data}: Props) => {
-    const rows = data.map((stock) => (
+    //Maybe remove the empty table clause since it isnt shown anyway
+    const rows = data.length > 0 ? data.map(({code, name, color, avgPrice, volume, data}) => {
+        const lastClose = data?.[data.length -1]?.close ?? 0;
+        const previousClose = data?.[data.length -2]?.close ?? 0;
+        const profit = (lastClose - avgPrice) * volume; 
+        const change = lastClose - previousClose;
+        const value = lastClose * volume;
         
-        <Table.Tr key={stock.code}>
-            <Table.Td><ColorSwatch color={stock.color} size={15}/></Table.Td>
-            <Table.Td>{stock.code}</Table.Td>
-            <Table.Td>{stock.name}</Table.Td>
-            <Table.Td>{stock.avgPrice}</Table.Td>
-            <Table.Td>{((stock.data![stock.data!.length -1].close - stock.avgPrice) * stock.volume).toFixed(2)}</Table.Td>
-            <Table.Td>{stock.volume}</Table.Td>
-            <Table.Td>{stock.data![stock.data!.length -1].close}</Table.Td>
-            <Table.Td>{(stock.data![stock.data!.length -1].close - stock.data![stock.data!.length -2].close).toFixed(2)}</Table.Td>
-            <Table.Td>{stock.volume * stock.data![stock.data!.length -1].close}</Table.Td>
-        </Table.Tr>
-    ));
+        return (
+        <Table.Tr key={code}>
+            <Table.Td><ColorSwatch color={color} size={15}/></Table.Td>
+            <Table.Td>{code}</Table.Td>
+            <Table.Td>{name}</Table.Td>
+            <Table.Td>{avgPrice}</Table.Td>
+            <Table.Td>{profit.toFixed(2)}</Table.Td>
+            <Table.Td>{volume}</Table.Td>
+            <Table.Td>{lastClose}</Table.Td>
+            <Table.Td>{change.toFixed(2)}</Table.Td>
+            <Table.Td>{value.toFixed(2)}</Table.Td>
+            </Table.Tr>
+        );
+    }) : (
+            <Table.Tr>
+                <Table.Td colSpan={9} align="center">
+                    No stocks available.
+                </Table.Td>
+            </Table.Tr>
+        );
 
     return (
             <Table>
