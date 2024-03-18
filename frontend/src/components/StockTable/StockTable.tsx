@@ -25,6 +25,8 @@ const StockTable = ({data}: Props) => {
         const lastClose = data?.[data.length -1]?.close ?? 0;
         const previousClose = data?.[data.length -2]?.close ?? 0;
         const profit = (lastClose - avgPrice) * volume; 
+        const initialInvestment = avgPrice * volume;
+        const profitPercentage = initialInvestment > 0 ? (profit / initialInvestment) * 100 : 0; //Ternarary used to prevent divide by 0 errors.
         const change = lastClose - previousClose;
         const changePercentage = previousClose > 0 ? ((change) / previousClose) * 100 : 0; //Ternarary used to prevent divide by 0 errors.
         const value = lastClose * volume;
@@ -39,10 +41,10 @@ const StockTable = ({data}: Props) => {
                 <Table.Td>{code}</Table.Td>
                 <Table.Td>{name}</Table.Td>
                 <Table.Td>{avgPrice}</Table.Td>
-                <Table.Td>{profit.toFixed(2)}</Table.Td>
+                <Table.Td>{`${profit.toFixed(2)} (${profitPercentage.toFixed(2)}%)`}</Table.Td>
                 <Table.Td>{volume}</Table.Td>
                 <Table.Td>{lastClose}</Table.Td>
-                <Table.Td>{`${change.toFixed(2)}(${changePercentage.toFixed(2)}%)`}</Table.Td>
+                <Table.Td>{`${change.toFixed(2)} (${changePercentage.toFixed(2)}%)`}</Table.Td>
                 <Table.Td>{value.toFixed(2)}</Table.Td>
                 <Table.Td>{weight.toFixed(2)}%</Table.Td>
             </Table.Tr>
