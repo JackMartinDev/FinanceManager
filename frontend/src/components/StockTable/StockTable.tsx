@@ -26,7 +26,7 @@ const StockTable = ({data}: Props) => {
         const previousClose = data?.[data.length -2]?.close ?? 0;
         const profit = (lastClose - avgPrice) * volume; 
         const change = lastClose - previousClose;
-        const changePercentage = (change) / previousClose * 100;
+        const changePercentage = previousClose > 0 ? ((change) / previousClose) * 100 : 0; //Ternarary used to prevent divide by 0 errors.
         const value = lastClose * volume;
         const weight = (value / totalValue) * 100;
 
