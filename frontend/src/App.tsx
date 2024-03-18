@@ -60,7 +60,7 @@ function App() {
 
     if (isRefreshingSession) {
         return(
-            <div>Loading...</div>
+            <div></div>
         )
     }
 
