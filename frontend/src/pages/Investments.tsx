@@ -36,7 +36,6 @@ const InvestmentsPage = () => {
 
     const allQueriesLoaded = Stocks.every((res) => !res.isLoading);
 
-    //TODO BUG: stock does not refresh when the user has not holdings.
     const holdingsData:HoldingsData = Stocks.reduce<HoldingsData>((acc, result) => {
         if (!result.isError && result.data) {
             acc.push(result.data);
@@ -57,18 +56,17 @@ const InvestmentsPage = () => {
             <Modal opened={opened} onClose={close} title="Add stock" centered>
                 <AddStockModal close={close}/>
             </Modal>
+
             <Box mx={125}>
                 <Grid mb={50}>
                     <Grid.Col span={3}>
                         <StockChart data={chartData}/>
                     </Grid.Col>
-                    <Grid.Col span={8}>
+                    <Grid.Col span={9}>
                         <StockTable data={tableData}/>
                     </Grid.Col>
-                    <Grid.Col span={1}>
-                        <Button onClick={open}>Add stock</Button>
-                    </Grid.Col>
                 </Grid>
+                <Button onClick={open}>Add stock</Button>
                 <Flex
                     gap="md"
                     justify="center"

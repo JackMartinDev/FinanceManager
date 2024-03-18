@@ -6,7 +6,12 @@ type Props = {
     data: {name: string, volume: number, data?:StockData, color: string}[]
 }
 const StockChart = ({data}: Props) => {
-    const chartData = data.map(item => ({name: item.name, value: (item.volume * item.data![item.data!.length -1].close), color: item.color}));
+    const chartData = data.map(item => {
+        const lastDataPoint = item.data?.[item.data?.length - 1];
+        const value = lastDataPoint ? item.volume * lastDataPoint.close : 0;
+        return {name: item.name, value, color: item.color}
+    });
+
     return(
         <Group align="start" gap={35}>
             <DonutChart data={chartData} withTooltip={false} chartLabel="Stock breakdown" strokeWidth={0}/>
@@ -18,7 +23,7 @@ const StockChart = ({data}: Props) => {
                     </Group>))}
             </Stack>
         </Group>
-   )
+    )
 }
 
 export default StockChart
