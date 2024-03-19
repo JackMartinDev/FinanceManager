@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Holding from "../models/holding"; 
 import { THolding } from "../utils/types";
+import { fetchStockDataForUser } from "../services/stockDataService";
 
 export const getHoldings = async(_: Request, res: Response) => {
     const {result, error} = await Holding.fetchAll();
@@ -12,7 +13,7 @@ export const getHoldings = async(_: Request, res: Response) => {
 
 export const getHolding = async(req: Request, res: Response) => {
     const {id} = req.params;
-    const {result, error} = await Holding.fetchByUserId(id);
+    const {result, error} = await fetchStockDataForUser(id); 
     if(error) {
         return res.status(500).json({error: "An error occurred"})
     }

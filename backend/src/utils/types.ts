@@ -20,3 +20,9 @@ export type THolding = {
     createdAt?: string,
     updatedAt?: string
 }
+
+
+export type TStock = {
+    date: string,
+    close: number
+}

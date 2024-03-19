@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express, { Application } from 'express';
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
 
 import userRoutes from "./routes/users"
 import authRoutes from "./routes/auth"
@@ -9,7 +11,6 @@ import holdingRoutes from "./routes/holdings"
 import { checkAuthMiddleware } from './utils/auth';
 
 const app:Application = express();
-dotenv.config();
 
 //TODO Add .env file
 const PORT = process.env.PORT;
@@ -29,7 +30,7 @@ app.use((req, _, next) => {
 app.use("/auth",authRoutes);
 
 //Prevent non logged in users from accessing content
-app.use(checkAuthMiddleware);
+//app.use(checkAuthMiddleware);
 
 app.use("/test", userRoutes);
 
