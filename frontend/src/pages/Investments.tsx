@@ -19,7 +19,7 @@ const InvestmentsPage = () => {
     const queryClient = useQueryClient()
 
     const { data: userHoldings, isLoading, isFetching} = useQuery<UserHolding[], Error, UserHolding[]>({
-        queryKey: ['holdings', user?.id], 
+        queryKey: ['holdings'], 
         queryFn: () => client.get(`holding/${user?.id}`).then((res) => res.data),
         select: (data) => data.map(item => camelcaseKeys(item))
     });
