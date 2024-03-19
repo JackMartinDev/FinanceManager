@@ -1,14 +1,15 @@
-import { Box, Button, Flex, Grid, Group, LoadingOverlay, Modal, Skeleton} from "@mantine/core"
+import { Box, Button, Flex, Grid, Group, LoadingOverlay, Modal} from "@mantine/core"
 import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
-import AddStockModal from "../components/AddStockModal/AddStockModal";
+import StockModal from "../components/StockModal/StockModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useAuth } from "../context/AuthContext";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "../utils/axios";
 import axios from "axios";
 import camelcaseKeys from 'camelcase-keys';
+import { useMemo } from "react";
 
 const API_TOKEN = import.meta.env.VITE_STOCKS_API_TOKEN
 
@@ -48,22 +49,42 @@ const InvestmentsPage = () => {
     if( userHoldings?.length === 0 && !isLoading) {
         return (
             <div>
-            <Modal opened={opened} onClose={close} title="Add stock" centered>
-                <AddStockModal close={close}/>
-            </Modal>
+                <Modal opened={opened} onClose={close} title="Add stock" centered>
+                    <StockModal close={close} type="add"/>
+                </Modal>
                 <Button onClick={open} >Add stock</Button>
             </div>
         )
     }
 
-    const chartData = holdingsData.map(item => ({name: item.code, volume: item.volume, data: item.data, color: item.color}))
-    const graphData = holdingsData.map(item => ({stock: item.code, color: item.color, data: item.data}))
-    const tableData = holdingsData.map(item => ({code: item.code, name: item.name, avgPrice: item.buyPrice, volume: item.volume, data: item.data, color: item.color}))
+
+    const chartData = useMemo(() => holdingsData.map(item => ({
+        name: item.code,
+        volume: item.volume,
+        data: item.data,
+        color: item.color
+    })), [holdingsData]);
+
+    const graphData = useMemo(() => holdingsData.map(item => ({
+        stock: item.code,
+        color: item.color,
+        data: item.data
+    })), [holdingsData]);
+
+    const tableData = useMemo(() => holdingsData.map(item => ({
+        id: item.id,
+        code: item.code,
+        name: item.name,
+        buyPrice: item.buyPrice,
+        volume: item.volume,
+        data: item.data,
+        color: item.color
+    })), [holdingsData]);
 
     return(     
         <>
             <Modal opened={opened} onClose={close} title="Add stock" centered>
-                <AddStockModal close={close}/>
+                <StockModal close={close} type="add"/>
             </Modal>
 
             <Box mx={50}>

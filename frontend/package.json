@@ -15,6 +15,7 @@
     "@mantine/dates": "^7.5.3",
     "@mantine/form": "^7.5.3",
     "@mantine/hooks": "^7.5.3",
+    "@mantine/modals": "^7.6.2",
     "@mantinex/dev-icons": "^1.0.2",
     "@mantinex/mantine-logo": "^1.0.1",
     "@tabler/icons-react": "^2.47.0",

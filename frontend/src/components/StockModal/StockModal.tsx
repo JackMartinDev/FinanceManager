@@ -10,10 +10,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const colors = ['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
 
-const AddStockModal = (props:{close: () => void}) => {
+const StockModal = (props:{close: () => void, type: "edit" | "add", holding?: UserHolding}) => {
     const testFilter = testData.map(stock => ({value: `${stock.Code}: ${stock.Name}`, label: `${stock.Code}: ${stock.Name}`}));
     const icon = <IconCurrencyDollar style={{ width: rem(16), height: rem(16), color: "#121212" }}/>
-    const [selectedColor, setSelectedColor] = useState('#2e2e2e');
+    const [selectedColor, setSelectedColor] = useState(props.holding ? props.holding.color : '#2e2e2e');
     const user = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,7 +21,12 @@ const AddStockModal = (props:{close: () => void}) => {
 
     const addStockMutation = useMutation({
         mutationFn: (stock: {userId: string | undefined; code: string; name:string; buyPrice: string;volume: string;color: string;}) => {
-            return client.post(`holding/`, stock)
+            switch(props.type){
+                case "edit":
+                    return client.patch(`holding/${props.holding?.id}`, stock)
+                case "add": 
+                    return client.post(`holding/`, stock)
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["holdings"]})
@@ -30,10 +35,10 @@ const AddStockModal = (props:{close: () => void}) => {
 
     const form = useForm({
         initialValues: {
-            code: '',
-            buyPrice: '',
-            volume: '',
-            color: '#2e2e2e',
+            code: props.holding ? `${props.holding.code}: ${props.holding.name}` : '',
+            buyPrice: props.holding ? props.holding.buyPrice.toString() : '',
+            volume: props.holding ? props.holding.volume.toString() : '',
+            color: props.holding ? props.holding.color : '#2e2e2e',
         },
                //Add validation 
         validate: {
@@ -43,6 +48,7 @@ const AddStockModal = (props:{close: () => void}) => {
             color: (val) => (/#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/i.test(val) ? null : 'Color must be a hexidecimal value'),
         },
     });
+
 
     const onColorChangeHandler = (color: string) => {
         setSelectedColor(color);
@@ -133,4 +139,4 @@ const AddStockModal = (props:{close: () => void}) => {
     )
 }
 
-export default AddStockModal
+export default StockModal
