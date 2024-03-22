@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "../../utils/axios";
 
 type Props = {
-    data: StockInfo[]
+    data: StockData[]
 }
 
 const StockTable = ({data}: Props) => {
@@ -15,11 +15,10 @@ const StockTable = ({data}: Props) => {
     let totalProfit = 0;
     let totalChange = 0;
     const queryClient = useQueryClient();
-    queryClient.
 
-    const totalValue = data.reduce((acc, { volume, data }) => {
-        const lastClose = data?.[data.length - 1]?.close ?? 0;
-        return acc + (lastClose * volume);
+    const totalValue = data.reduce((acc, { holding, stockData }) => {
+        const lastClose = stockData[data.length - 1].close;
+        return acc + (lastClose * holding.volume);
     }, 0);
 
     const deleteMutation = useMutation({
@@ -29,7 +28,7 @@ const StockTable = ({data}: Props) => {
         onSuccess: () => {queryClient.invalidateQueries({queryKey: ["holdings"]})}
     })
 
-        const openEditModal = (holding:UserHolding | undefined) => {
+        const openEditModal = (holding:Holding | undefined) => {
         console.log(holding)
         if(holding){
             modals.open({
@@ -60,30 +59,28 @@ const StockTable = ({data}: Props) => {
         });
     }
 
-
-
-    const rows = data.map(({id, code, name, color, buyPrice, volume, data}) => {
-        const lastClose = data?.[data.length -1]?.close ?? 0;
-        const previousClose = data?.[data.length -2]?.close ?? 0;
-        const profit = (lastClose - buyPrice) * volume; 
-        const initialInvestment = buyPrice * volume;
+    const rows = data.map(({holding, stockData}) => {
+        const lastClose = stockData[stockData.length -1].close;
+        const previousClose = stockData[stockData.length -2].close;
+        const profit = (lastClose - holding.buyPrice) * holding.volume; 
+        const initialInvestment = holding.buyPrice * holding.volume;
         const profitPercentage = initialInvestment > 0 ? (profit / initialInvestment) * 100 : 0; //Ternarary used to prevent divide by 0 errors.
         const change = lastClose - previousClose;
         const changePercentage = previousClose > 0 ? ((change) / previousClose) * 100 : 0; //Ternarary used to prevent divide by 0 errors.
-        const value = lastClose * volume;
+        const value = lastClose * holding.volume;
         const weight = (value / totalValue) * 100;
 
         totalProfit += profit;
-        totalChange += change * volume;
+        totalChange += change * holding.volume;
 
         return (
-            <Table.Tr key={code}>
-                <Table.Td><ColorSwatch color={color} size={15}/></Table.Td>
-                <Table.Td>{code}</Table.Td>
-                <Table.Td>{name}</Table.Td>
-                <Table.Td>{buyPrice}</Table.Td>
+            <Table.Tr key={holding.code}>
+                <Table.Td><ColorSwatch color={holding.color} size={15}/></Table.Td>
+                <Table.Td>{holding.code}</Table.Td>
+                <Table.Td>{holding.name}</Table.Td>
+                <Table.Td>{holding.buyPrice}</Table.Td>
                 <Table.Td>{`${profit.toFixed(2)} (${profitPercentage.toFixed(2)}%)`}</Table.Td>
-                <Table.Td>{volume}</Table.Td>
+                <Table.Td>{holding.volume}</Table.Td>
                 <Table.Td>{lastClose}</Table.Td>
                 <Table.Td>{`${change.toFixed(2)} (${changePercentage.toFixed(2)}%)`}</Table.Td>
                 <Table.Td>{value.toFixed(2)}</Table.Td>
@@ -93,7 +90,7 @@ const StockTable = ({data}: Props) => {
                         <ActionIcon
                             variant="default" 
                             aria-label="Edit"
-                            onClick={() => {openEditModal({id, code, name, color, buyPrice, volume})}}    
+                            onClick={() => {openEditModal(holding)}}    
                         >
                             <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
                         </ActionIcon>
@@ -101,7 +98,7 @@ const StockTable = ({data}: Props) => {
                         <ActionIcon
                             variant="default" 
                             aria-label="Delete"
-                            onClick={() => {openDeleteModal(id)}}    
+                            onClick={() => {openDeleteModal(holding.id)}}    
                         >
                             <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
                         </ActionIcon>

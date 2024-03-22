@@ -64,7 +64,7 @@ const RegistrationForm = (props: {typeChangeHandler: ()=>void, formSubmitHandler
 
             <Group justify="space-between" mt="xl">
                 <Anchor component="button" type="button" c="dimmed" onClick={props.typeChangeHandler} size="xs">
-                    Don't have an account? Register
+                    Already have an account? Login
                 </Anchor>
                 <Button type="submit" radius="xl">
                     {props.isSubmitting ? <Loader type="dots" color="rgb(255, 255, 255)"/> : upperFirst("Register")}

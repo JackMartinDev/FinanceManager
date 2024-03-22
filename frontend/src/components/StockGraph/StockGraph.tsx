@@ -4,92 +4,11 @@ import { Anchor, Box, Container, Flex, Group, Text, Title } from "@mantine/core"
 import classes from "./StockGraph.module.css";
 import CustomTooltip from "./CustomTooltip";
 
-const parseData = (active: number, data: StockInfo) => {
-    const comparisonDate = new Date();
-    const parsedData = data.data!.map(data => ({date: data.date, close: data.close}))
-
-    switch(active){
-        case 0:
-            comparisonDate.setMonth(comparisonDate.getMonth() -1);
-            break;
-        case 1:
-            comparisonDate.setMonth(comparisonDate.getMonth() -3);
-            break;
-        case 2:
-            comparisonDate.setMonth(comparisonDate.getMonth() -6);
-            break;
-        case 3:
-            comparisonDate.setMonth(comparisonDate.getMonth() -12);
-            break;
-        default:
-            comparisonDate.setMonth(comparisonDate.getMonth() -12);
-    }
-
-    const filteredData = parsedData.filter(item => {
-        const itemDate = new Date((item.date));
-        return itemDate >= comparisonDate;
-    });
-    return filteredData
+type Props = {
+    data: StockData
 }
 
-const generateTicks = (data: {date: string, close: number}[], active: number) => {
-    const dates = data.map(object => object.date);
-    let ticks;
-    dates.shift();
-    dates.pop();
-
-    const firstDateForEachMonth: string[] = dates.reduce((acc: string[], cur: string) => {
-        // Extract the month and year from the current date
-        const [year, month] = cur.split('-');
-        const monthKey = `${year}-${month}`;
-
-        // Check if we already have an entry for this month
-        const lastEntryMonthKey = acc.length > 0 ? acc[acc.length - 1].split('-').slice(0, 2).join('-') : '';
-
-        // If the last entry in the accumulator is not from the current month, add the current date string
-        if (monthKey !== lastEntryMonthKey) {
-            acc.push(cur);
-        }
-
-        return acc;
-    }, []);
-
-    switch(active){
-        case 0:
-            ticks = dates.filter((_,index) => {
-                return index % 4 === 0;
-            });
-            break;
-        case 1:
-            ticks = dates.filter((_,index) => {
-                return index % 10 === 0;
-            });
-            break;
-        case 2:
-            ticks = firstDateForEachMonth;
-            break;
-        case 3:
-            ticks = firstDateForEachMonth.filter((_,index) => {
-                return index % 2 === 0;
-            });
-            ticks.shift();
-            break;
-        default:
-    }
-    return ticks
-}
-
-type StockInfo = {
-    stock: string; 
-    color: string;
-    data?: StockData
-}
-
-type GraphProps = {
-    data: StockInfo
-}
-
-const StockGraph = ({data}: GraphProps) => {
+const StockGraph = ({data}: Props) => {
     const [active, setActive] = useState(3);
     const peroidOptions = ["1M", "3M", "6M", "1Y"];
 
@@ -108,7 +27,7 @@ const StockGraph = ({data}: GraphProps) => {
         </Anchor>
     ));
 
-    const filteredData = parseData(active, data);
+    const filteredData = filterByDate(active, data.stockData);
     const ticks = generateTicks(filteredData, active);
 
     const closeValues = filteredData.map(item => item.close);
@@ -179,7 +98,7 @@ const StockGraph = ({data}: GraphProps) => {
             </Flex>
             <Box className={classes.links}>
                 <Group justify="space-between">
-                    <Title style={{fontWeight:600, marginLeft: 60}}>{data.stock}</Title>
+                    <Title style={{fontWeight:600, marginLeft: 60}}>{data.holding.code}</Title>
                     <Group gap={0} justify="flex-end" className={classes.mainLinks}>
                         {peroidButtons}
                     </Group>
@@ -191,10 +110,85 @@ const StockGraph = ({data}: GraphProps) => {
                 <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
                 <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
                 <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
-                <Line type="linear" dataKey="close" stroke={data.color} strokeWidth={2} dot={false} />
+                <Line type="linear" dataKey="close" stroke={data.holding.color} strokeWidth={2} dot={false} />
             </LineChart>
         </Container>
     )
 }
 
 export default StockGraph
+
+const filterByDate = (active: number, data: Stock) => {
+    const comparisonDate = new Date();
+
+    switch(active){
+        case 0:
+            comparisonDate.setMonth(comparisonDate.getMonth() -1);
+            break;
+        case 1:
+            comparisonDate.setMonth(comparisonDate.getMonth() -3);
+            break;
+        case 2:
+            comparisonDate.setMonth(comparisonDate.getMonth() -6);
+            break;
+        case 3:
+            comparisonDate.setMonth(comparisonDate.getMonth() -12);
+            break;
+        default:
+            comparisonDate.setMonth(comparisonDate.getMonth() -12);
+    }
+
+    const filteredData = data.filter(item => {
+        const itemDate = new Date((item.date));
+        return itemDate >= comparisonDate;
+    });
+    return filteredData
+}
+
+const generateTicks = (data: {date: string, close: number}[], active: number) => {
+    const dates = data.map(object => object.date);
+    let ticks;
+    dates.shift();
+    dates.pop();
+
+    const firstDateForEachMonth: string[] = dates.reduce((acc: string[], cur: string) => {
+        // Extract the month and year from the current date
+        const [year, month] = cur.split('-');
+        const monthKey = `${year}-${month}`;
+
+        // Check if we already have an entry for this month
+        const lastEntryMonthKey = acc.length > 0 ? acc[acc.length - 1].split('-').slice(0, 2).join('-') : '';
+
+        // If the last entry in the accumulator is not from the current month, add the current date string
+        if (monthKey !== lastEntryMonthKey) {
+            acc.push(cur);
+        }
+
+        return acc;
+    }, []);
+
+    switch(active){
+        case 0:
+            ticks = dates.filter((_,index) => {
+                return index % 4 === 0;
+            });
+            break;
+        case 1:
+            ticks = dates.filter((_,index) => {
+                return index % 10 === 0;
+            });
+            break;
+        case 2:
+            ticks = firstDateForEachMonth;
+            break;
+        case 3:
+            ticks = firstDateForEachMonth.filter((_,index) => {
+                return index % 2 === 0;
+            });
+            ticks.shift();
+            break;
+        default:
+    }
+    return ticks
+}
+

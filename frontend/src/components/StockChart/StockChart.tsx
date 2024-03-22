@@ -3,13 +3,13 @@ import { ColorSwatch, Group, Stack, Text } from "@mantine/core";
 import { formatAUD } from "../../utils/utils";
 
 type Props = {
-    data: {name: string, volume: number, data?:StockData, color: string}[]
+    data: StockData[] 
 }
 const StockChart = ({data}: Props) => {
     const chartData = data.map(item => {
-        const lastDataPoint = item.data?.[item.data?.length - 1];
-        const value = lastDataPoint ? item.volume * lastDataPoint.close : 0;
-        return {name: item.name, value, color: item.color}
+        const lastDataPoint = item.stockData[item.stockData.length - 1];
+        const value = item.holding.volume * lastDataPoint.close;
+        return {name: item.holding.code, value, color: item.holding.color}
     });
 
     return(

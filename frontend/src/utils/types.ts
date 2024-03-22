@@ -1,26 +1,21 @@
-
-type UserHolding = {
+type Holding = {
     id: string,
-    code: string,
-    name: string,
-    volume: number,
-    buyPrice: number,
-    color: string
-}
-
-type StockData = {
-    date: string,
-    close: number,
-}[];
-
-type StockInfo = {
-    id: string,
+    userId: string,
     code: string,
     name: string,
     volume: number,
     buyPrice: number,
     color: string,
-    data?: StockData
+    createdAt: string,
+    updatedAt: string
 }
 
-type HoldingsData = StockInfo[];
+type Stock = {
+    date: string,
+    close: number,
+}[]
+
+type StockData = {
+    holding: Holding,
+    stockData: Stock
+};

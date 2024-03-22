@@ -46,7 +46,7 @@ const LoginForm = (props: {typeChangeHandler: () => void, formSubmitHandler: (fo
 
             <Group justify="space-between" mt="xl">
                 <Anchor component="button" type="button" c="dimmed" onClick={props.typeChangeHandler} size="xs">
-                    Already have an account? Login
+                  Don't have an account? Register 
                 </Anchor>
                 <Button type="submit" radius="xl">
                     {props.isSubmitting ? <Loader type="dots" color="rgb(255, 255, 255)"/> : upperFirst("Login")}

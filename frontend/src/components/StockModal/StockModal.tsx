@@ -10,7 +10,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const colors = ['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
 
-const StockModal = (props:{close: () => void, type: "edit" | "add", holding?: UserHolding}) => {
+const StockModal = (props:{close: () => void, type: "edit" | "add", holding?: Holding}) => {
+        //TODO Get this test data from the API
     const testFilter = testData.map(stock => ({value: `${stock.Code}: ${stock.Name}`, label: `${stock.Code}: ${stock.Name}`}));
     const icon = <IconCurrencyDollar style={{ width: rem(16), height: rem(16), color: "#121212" }}/>
     const [selectedColor, setSelectedColor] = useState(props.holding ? props.holding.color : '#2e2e2e');
@@ -71,7 +72,7 @@ const StockModal = (props:{close: () => void, type: "edit" | "add", holding?: Us
         const {color, volume, buyPrice} = values;
         const [code, name] = values.code.split(": ");
         const postData = {code, name, color, volume, buyPrice, userId: user.user?.id}
-        console.log(postData)
+        console.log("posting",postData)
         try {
             addStockMutation.mutate(postData)
             props.close();
@@ -121,6 +122,7 @@ const StockModal = (props:{close: () => void, type: "edit" | "add", holding?: Us
                 <NumberInput 
                     allowDecimal={false} 
                     flex={1} 
+                    hideControls 
                     label="Volume"
                     placeholder="Units"
                     value={form.values.volume}
@@ -133,7 +135,7 @@ const StockModal = (props:{close: () => void, type: "edit" | "add", holding?: Us
                 <SimpleGrid cols={7} spacing={4} verticalSpacing={4}>
                     {swatches}
                 </SimpleGrid>
-                <Button type="submit">Add</Button>
+                <Button type="submit">{props.type === "add" ? "Add" : "Edit"}</Button>
             </Group>
         </form>
     )
