@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Grid, Group, Modal} from "@mantine/core"
+import { Box, Button, Center, Flex, Grid, Group, Modal, Stack, Title} from "@mantine/core"
 import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
@@ -22,12 +22,15 @@ const InvestmentsPage = () => {
     //TODO: Find a work around for the inital loading display when no user holdings
     if( holdingsData?.length === 0 && !isLoading) {
         return (
-            <div>
+            <Center>
                 <Modal opened={opened} onClose={close} title="Add stock" centered>
                     <StockModal close={close} type="add"/>
                 </Modal>
-                <Button onClick={open} >Add stock</Button>
-            </div>
+                <Stack align="center">
+                    <Title>Start Investing</Title>
+                    <Button  onClick={open} >Add stocks</Button>
+                </Stack>
+            </Center>
         )
     }
 
@@ -39,10 +42,10 @@ const InvestmentsPage = () => {
 
             <Box mx={50}>
                 <Grid mb={50}>
-                    <Grid.Col span={3}>
+                    <Grid.Col span={2}>
                         {holdingsData && <StockChart data={holdingsData}/>}
                     </Grid.Col>
-                    <Grid.Col span={9}>
+                    <Grid.Col span={10}>
                         <Group justify="right">
                             {holdingsData && <StockTable data={holdingsData}/>}
                             <Button onClick={open} justify="right">Add stock</Button>

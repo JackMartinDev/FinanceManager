@@ -8,6 +8,7 @@ import { useIsFetching } from "@tanstack/react-query"
 const RootPage = ():JSX.Element =>{
     const [opened, { toggle }] = useDisclosure();
     const isFetching = useIsFetching();
+
     return(
         <AppShell
             header={{height: 60}}   

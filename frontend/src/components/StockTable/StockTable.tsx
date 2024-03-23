@@ -79,10 +79,10 @@ const StockTable = ({data}: Props) => {
                 <Table.Td>{holding.code}</Table.Td>
                 <Table.Td>{holding.name}</Table.Td>
                 <Table.Td>{holding.buyPrice}</Table.Td>
-                <Table.Td>{`${profit.toFixed(2)} (${profitPercentage.toFixed(2)}%)`}</Table.Td>
+                <Table.Td style={{color: Math.sign(profit) === 1 ? "green" : "red"}}>{`${profit.toFixed(2)} (${profitPercentage.toFixed(2)}%)`}</Table.Td>
                 <Table.Td>{holding.volume}</Table.Td>
                 <Table.Td>{lastClose}</Table.Td>
-                <Table.Td>{`${change.toFixed(2)} (${changePercentage.toFixed(2)}%)`}</Table.Td>
+                <Table.Td style={{color: Math.sign(change) === 1 ? "green" : "red"}}>{`${change.toFixed(2)} (${changePercentage.toFixed(2)}%)`}</Table.Td>
                 <Table.Td>{value.toFixed(2)}</Table.Td>
                 <Table.Td>{weight.toFixed(2)}%</Table.Td>
                 <Table.Td>
