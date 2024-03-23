@@ -28,7 +28,7 @@ const StockGraph = ({data}: Props) => {
     ));
 
     const filteredData = filterByDate(active, data.stockData);
-    const ticks = generateTicks(filteredData, active);
+    const XTicks = generateXTicks(filteredData, active);
 
     const closeValues = filteredData.map(item => item.close);
     const yesterdayClose = closeValues[closeValues.length -1];
@@ -38,42 +38,32 @@ const StockGraph = ({data}: Props) => {
     const minClose = Math.min(...closeValues);
     const maxClose = Math.max(...closeValues);
 
-    const range = Math.ceil(maxClose - minClose);
+    const range = maxClose - minClose;
+    const buffer = range * 0.05;
 
-    let interval;
-    let tickCount;
+    const maxDomain = maxClose + buffer
+    const minDomain = minClose - buffer;
 
-    //I would like to refactor this one day
-    if(range >= 40) {
-        interval = 20;
-        tickCount = 4;
-    } else if(range >= 20) {
-        interval = 10;
-        tickCount = 5;
-    }
-    else if(range >= 15) {
-        interval = 8;
-        tickCount = 5;
-    }
-    else if(range >= 10) {
-        interval = 4;
-        tickCount = 5;
-    } else if(range >= 8) {
-        interval = 5;
-        tickCount = 4;
-    } else if(range >= 6) {
-        interval = 2;
-        tickCount = 5;
-    } else if(range >= 1) {
-        interval = 1;
-        tickCount = 6;
-    } else{
-        interval = 5;
-        tickCount = 6;
-    }
+    let startingTickCount = 5;
+    const startingInterval = range / (startingTickCount - 1)
 
-    const minDomain = Math.floor(minClose / interval) * interval;
-    const maxDomain = Math.ceil(maxClose / interval) * interval;
+    const findNiceNumber = (value: number) => {
+        const exponent = Math.floor(Math.log10(value)); 
+        const fraction = value / Math.pow(10, exponent);         
+        let niceFraction;
+
+        if (fraction < 1.5) niceFraction = 1;
+        else if (fraction < 3) niceFraction = 2;
+        else if (fraction < 7) niceFraction = 5;
+        else niceFraction = 10;
+
+        return niceFraction * Math.pow(10, exponent);
+
+    }
+    const interval = findNiceNumber(startingInterval)
+    console.log(minDomain, maxDomain, interval)
+    //work on getting these ticks to be nicer numbers
+    const YTicks = generateYTicks(minDomain, maxDomain, interval);
 
     const formatXAxis = (dateString: string) => {
         const options: Intl.DateTimeFormatOptions = active > 1 ? { year: 'numeric', month: 'short' } : {month: "short", day: "numeric"};
@@ -107,8 +97,8 @@ const StockGraph = ({data}: Props) => {
 
             <LineChart width={700} height={300} margin={{right:20}} data={filteredData}>
                 <CartesianGrid opacity={0.3} vertical={false}/>
-                <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={ticks} tick={{fontSize: 12, fill: "#868e96"}} />
-                <YAxis domain={[minDomain, maxDomain]} tickCount={tickCount} tick={{fontSize: 12, fill: "#868e96"}}/>
+                <XAxis dataKey="date" tickFormatter={formatXAxis} ticks={XTicks} tick={{fontSize: 12, fill: "#868e96"}} />
+                <YAxis domain={[minDomain, maxDomain]} ticks={YTicks} tick={{fontSize: 12, fill: "#868e96"}}/>
                 <Tooltip position={{y:10}} content={<CustomTooltip/>} cursor={{strokeDasharray: "3 3"}} isAnimationActive={false} />
                 <Line type="linear" dataKey="close" stroke={data.holding.color} strokeWidth={2} dot={false} />
             </LineChart>
@@ -145,7 +135,18 @@ const filterByDate = (active: number, data: Stock) => {
     return filteredData
 }
 
-const generateTicks = (data: {date: string, close: number}[], active: number) => {
+const generateYTicks = (min: number, max: number, interval: number) => {
+    const ticks = [];
+    let currentTick = min;
+
+    while (currentTick <= max) {
+        ticks.push(Math.round(currentTick * 10000)/10000);
+        currentTick += interval
+    }
+    return ticks
+}
+
+const generateXTicks = (data: {date: string, close: number}[], active: number) => {
     const dates = data.map(object => object.date);
     let ticks;
     dates.shift();

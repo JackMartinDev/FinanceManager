@@ -1,20 +1,19 @@
-import { Box, Button, Flex, Grid, Group, LoadingOverlay, Modal} from "@mantine/core"
+import { Box, Button, Flex, Grid, Group, Modal} from "@mantine/core"
 import StockGraph from "../components/StockGraph/StockGraph"
 import StockTable from "../components/StockTable/StockTable"
 import StockChart from "../components/StockChart/StockChart";
 import StockModal from "../components/StockModal/StockModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useAuth } from "../context/AuthContext";
-import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { client } from "../utils/axios";
 
 
 const InvestmentsPage = () => {
     const {user} = useAuth();
     const [opened, { open, close }] = useDisclosure(false);
-    const queryClient = useQueryClient()
 
-    const { data: holdingsData, isLoading, isFetching} = useQuery<StockData[], Error, StockData[]>({
+    const { data: holdingsData, isLoading } = useQuery<StockData[], Error, StockData[]>({
         queryKey: ['holdings', user?.id], 
         queryFn: () => client.get(`holding/${user?.id}`).then((res) => res.data),
     });
@@ -39,12 +38,6 @@ const InvestmentsPage = () => {
             </Modal>
 
             <Box mx={50}>
-                <LoadingOverlay
-                    visible={isLoading || isFetching}
-                    zIndex={1000}
-                    overlayProps={{ radius: 'sm', blur: 2 }}
-                    loaderProps={{ color: 'blue', type: 'bars' }}
-                />
                 <Grid mb={50}>
                     <Grid.Col span={3}>
                         {holdingsData && <StockChart data={holdingsData}/>}
