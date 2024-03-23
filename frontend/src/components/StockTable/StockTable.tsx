@@ -47,8 +47,8 @@ const StockTable = ({data}: Props) => {
             title: "Delete Holding",
             children: (
                 <Text size="md">
-                    This action is so important that you are required to confirm it with a modal. Please click
-                    one of these buttons to proceed.
+                    You are about to delete a holding from your investment portfolio? 
+                    Are you sure you want to proceed?
                 </Text>
             ),
             labels: { confirm: 'Delete Holding', cancel: 'Cancel' },
