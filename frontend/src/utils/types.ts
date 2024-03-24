@@ -19,3 +19,11 @@ type StockData = {
     holding: Holding,
     stockData: Stock
 };
+
+//Maybe use date type for month
+type Subscription = {
+    month: string,
+    subscriptions: {name: string, price: number}[],
+    total: number
+}
+
