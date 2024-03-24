@@ -9,10 +9,15 @@ export const getSubscriptions = async(_: Request, res: Response) => {
     }
     return res.status(200).json(result); 
 };
-
+//{
+//        month: "2024-02",
+//        subscriptions: [{name: "ChatGPT", price: 23.50}],
+//        total: 23.50
+//}
 export const getSubscription = async(req: Request, res: Response) => {
     const {id} = req.params;
     const {result, error} = await Subscription.fetchByUserId(id)
+    console.log(result)
     if(error) {
         return res.status(500).json({error: "An error occurred"})
     }
