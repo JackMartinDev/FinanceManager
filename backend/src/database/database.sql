@@ -28,3 +28,14 @@ create table holdings(
 );
 
 
+create table subscriptions(
+    id VARCHAR(100) PRIMARY KEY,
+    user_id VARCHAR(100) NOT NULL,
+    name VARCHAR(100),
+    price REAL,
+    start_date DATE,
+    end_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/users"
 import authRoutes from "./routes/auth"
 import holdingRoutes from "./routes/holdings"
+import subscriptionRoutes from "./routes/subscription"
 import { checkAuthMiddleware } from './utils/auth';
 
 const app:Application = express();
@@ -35,6 +36,8 @@ app.use("/auth",authRoutes);
 app.use("/test", userRoutes);
 
 app.use("/holding", holdingRoutes);
+
+app.use("/subscription", subscriptionRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

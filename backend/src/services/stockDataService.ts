@@ -3,7 +3,7 @@ import axios from "axios";
 import { TStock } from "../utils/types";
 import camelcaseKeys from "camelcase-keys";
 
-const token = process.env.STOCKS_API_KEY;
+const token = "65d9e3da56e398.33452650";
 
 export const fetchStockDataForUser = async (userId:string ) => {
     const {result, error} = await Holding.fetchByUserId(userId)

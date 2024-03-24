@@ -21,6 +21,17 @@ export type THolding = {
     updatedAt?: string
 }
 
+export type TSubscription = {
+    id: string,
+    name: string,
+    price: number,
+    startDate: string,
+    endDate: string,
+    userId: string,
+    createdAt?: string,
+    updatedAt?: string
+}
+
 
 export type TStock = {
     date: string,
