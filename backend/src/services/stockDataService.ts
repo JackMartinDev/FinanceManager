@@ -3,7 +3,7 @@ import axios from "axios";
 import { TStock } from "../utils/types";
 import camelcaseKeys from "camelcase-keys";
 
-const token = "65d9e3da56e398.33452650";
+const token = process.env.STOCKS_API_KEY;
 
 export const fetchStockDataForUser = async (userId:string ) => {
     const {result, error} = await Holding.fetchByUserId(userId)
@@ -27,7 +27,6 @@ export const fetchStockDataForUser = async (userId:string ) => {
 
 
 const fetchStockData = async(holdingCode: string):Promise<TStock[]> => {
-    console.log(token)
     const response = await axios.get(`https://eodhd.com/api/eod/${holdingCode}.AU?period=d&api_token=${token}&fmt=json`);
     return response.data
 }
