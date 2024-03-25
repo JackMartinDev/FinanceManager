@@ -26,7 +26,7 @@ export type TSubscription = {
     name: string,
     price: number,
     startDate: string,
-    endDate: string,
+    endDate?: string,
     userId: string,
     createdAt?: string,
     updatedAt?: string

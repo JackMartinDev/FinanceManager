@@ -48,7 +48,14 @@ export default class subscription {
 
     static async fetchByUserId(userId: string): Promise<{ result: TSubscription[] | null, error: any }> {
         try {
-            const subscription = await db.query("SELECT * FROM subscriptions WHERE user_id = $1", [userId]);
+            const subscription = await db.query(`SELECT 
+                id,
+                user_id,
+                name,
+                TO_CHAR(start_date, 'YYYY-MM') AS start_date,
+                TO_CHAR(end_date, 'YYYY-MM') AS end_date,
+                price
+                FROM subscriptions WHERE user_id = $1`, [userId]);
             return { result: subscription.rows, error: null };
         } catch (error) {
             return { result: null, error };

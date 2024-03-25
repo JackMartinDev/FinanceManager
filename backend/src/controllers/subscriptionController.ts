@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Subscription from "../models/subscription"; 
 import { TSubscription } from "../utils/types";
+import camelcaseKeys from "camelcase-keys";
+import { groupSubscriptionsService } from "../services/groupSubscriptionsService";
 
 export const getSubscriptions = async(_: Request, res: Response) => {
     const {result, error} = await Subscription.fetchAll();
@@ -9,15 +11,10 @@ export const getSubscriptions = async(_: Request, res: Response) => {
     }
     return res.status(200).json(result); 
 };
-//{
-//        month: "2024-02",
-//        subscriptions: [{name: "ChatGPT", price: 23.50}],
-//        total: 23.50
-//}
+
 export const getSubscription = async(req: Request, res: Response) => {
     const {id} = req.params;
     const {result, error} = await Subscription.fetchByUserId(id)
-    console.log(result)
     if(error) {
         return res.status(500).json({error: "An error occurred"})
     }
@@ -25,6 +22,8 @@ export const getSubscription = async(req: Request, res: Response) => {
     if (!result) {
         return res.status(404).json({error: "No subscription found"}) 
     }
+    const groupedResult = groupSubscriptionsService(camelcaseKeys(result))
+
     return res.status(200).json(result); 
 };
 
