@@ -78,7 +78,7 @@ const StockTable = ({data}: Props) => {
                 <Table.Td><ColorSwatch color={holding.color} size={15}/></Table.Td>
                 <Table.Td>{holding.code}</Table.Td>
                 <Table.Td>{holding.name}</Table.Td>
-                <Table.Td>{holding.buyPrice}</Table.Td>
+                <Table.Td>{holding.buyPrice.toFixed(2)}</Table.Td>
                 <Table.Td style={{color: Math.sign(profit) === 1 ? "green" : "red"}}>{`${profit.toFixed(2)} (${profitPercentage.toFixed(2)}%)`}</Table.Td>
                 <Table.Td>{holding.volume}</Table.Td>
                 <Table.Td>{lastClose}</Table.Td>
