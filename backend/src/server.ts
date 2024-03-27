@@ -33,9 +33,9 @@ app.use("/auth",authRoutes);
 
 app.use("/test", userRoutes);
 
-app.use("/holding", holdingRoutes);
+app.use("/holdings", holdingRoutes);
 
-app.use("/subscription", subscriptionRoutes);
+app.use("/subscriptions", subscriptionRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
