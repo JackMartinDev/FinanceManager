@@ -6,7 +6,7 @@ type Props = {
 
 const SubscriptionList = ({data}: Props) => {
     if(!data) return(
-        <Table w={500}>
+        <Table withTableBorder>
             <Table.Thead>
                 <Table.Tr>
                     <Table.Th>Service name</Table.Th>
@@ -36,11 +36,11 @@ const SubscriptionList = ({data}: Props) => {
     );
 
     return (
-        <Table w={500}>
+        <Table withTableBorder>
             <Table.Thead>
                 <Table.Tr>
-                    <Table.Th>Service name</Table.Th>
-                    <Table.Th>Price</Table.Th>
+                    <Table.Th>Service Name</Table.Th>
+                    <Table.Th>Monthly Fee</Table.Th>
                 </Table.Tr>
             </Table.Thead>
             <Table.Tbody>

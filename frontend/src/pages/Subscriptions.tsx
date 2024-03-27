@@ -1,4 +1,4 @@
-import { Button, Group, Stack } from "@mantine/core"
+import { Button, Group, Stack, Title } from "@mantine/core"
 import { DateValue, MonthPickerInput, YearPickerInput } from '@mantine/dates';
 import SubscriptionsGraph from "../components/Subscriptions/Graph/SubscriptionsGraph"
 import SubscriptionList from "../components/Subscriptions/List/SubscriptionsList"
@@ -7,14 +7,6 @@ import { useAuth } from "../context/AuthContext"
 import { client } from "../utils/axios"
 import { useState } from "react"
 import dayjs from "dayjs"
-
-//Current thoughts
-//The subscription table will be a component that is managed using a tab system. 1 tab will be generated for each month in the data array.
-//The data for that specific month will be passed into the list as a prop;
-//The year can also be used to add tabs/filtering for the yearly graph
-//
-//
-//For the date select I will use a left and right button as well as a month picker.
 
 const SubscriptionsPage = () => {
     const {user} = useAuth()
@@ -60,24 +52,19 @@ const SubscriptionsPage = () => {
     }
 
 
-    const prepareGraphData = (data: MonthlySubscription[], year: string):MonthlySubscription[] => {
+    const generateGraphData = (data: MonthlySubscription[], year: string):MonthlySubscription[] => {
         return Array.from({ length: 12}, (_, i) => {
-            // Create a dayjs date for each month of the given year
-            const monthDate = dayjs(`${year}-01-01`).add(i, 'month');
-            // Format the month to match your MonthlySubscription month format
-            const formattedMonth = monthDate.format('YYYY-MM');
-            // Check if there's existing data for this month
-            const existingData = data.find(d => d.month === formattedMonth);
-            // Return existing data or create a default object if none found
-            return existingData || { month: formattedMonth, subscriptions: [], total: 0 };
+            const monthDate = dayjs(`${year}-01-01`).add(i, 'month').format("YYYY-MM");
+            const existingData = data.find(d => d.month === monthDate);
 
+            return existingData || { month: monthDate, subscriptions: [], total: 0 };
         });
     };
 
     return(
         <>
-            Subscriptions
-            <Group align="start">
+            <Title mb={16}>Subscriptions</Title>
+            <Group align="start" justify="space-between" grow gap={200}>
                 <Stack>
                     <Group>
                         <Button onClick={prevMonthHandler}>Prev</Button>
@@ -104,7 +91,7 @@ const SubscriptionsPage = () => {
                     </Group>
 
                     {subscriptionsData &&
-                        <SubscriptionsGraph data={prepareGraphData(subscriptionsData.monthlyList, activeYear)}/>
+                        <SubscriptionsGraph data={generateGraphData(subscriptionsData.monthlyList, activeYear)}/>
                     }
                 </Stack>
             </Group>

@@ -40,6 +40,7 @@ const InvestmentsPage = () => {
                 <StockModal close={close} type="add"/>
             </Modal>
 
+            <Title mb={16}>Investments</Title>
             <Box mx={50}>
                 <Grid mb={50}>
                     <Grid.Col span={2}>
