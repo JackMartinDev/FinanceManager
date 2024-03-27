@@ -13,9 +13,9 @@ const InvestmentsPage = () => {
     const {user} = useAuth();
     const [opened, { open, close }] = useDisclosure(false);
 
-    const { data: holdingsData, isLoading } = useQuery<StockData[], Error, StockData[]>({
+    const { data: holdingsData, isLoading } = useQuery<StockData[]>({
         queryKey: ['holdings', user?.id], 
-        queryFn: () => client.get(`holding/${user?.id}`).then((res) => res.data),
+        queryFn: () => client.get(`holdings/${user?.id}`).then((res) => res.data),
     });
     console.log(holdingsData);
 

@@ -22,8 +22,25 @@ type StockData = {
 
 //Maybe use date type for month
 type Subscription = {
+    id: string,
+    name: string,
+    price: number,
+    startDate: string,
+    endDate?: string,
+    userId: string,
+    createdAt?: string,
+    updatedAt?: string
+}
+
+type MonthlySubscription = {
     month: string,
     subscriptions: {name: string, price: number}[],
     total: number
 }
+
+type SubscriptionList = {
+    subscriptions: Subscription[],
+    monthlyList: MonthlySubscription[]
+}
+
 

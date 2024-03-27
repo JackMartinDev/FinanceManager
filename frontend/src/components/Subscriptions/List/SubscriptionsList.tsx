@@ -1,12 +1,12 @@
 import { Table } from "@mantine/core"
 
 type Props = {
-    data: Subscription
+    data: MonthlySubscription
 }
 
 const SubscriptionList = ({data}: Props) => {
     const rows = data.subscriptions.map((item) => (
-        <Table.Tr key={data.month}>
+        <Table.Tr key={item.name}>
             <Table.Td>{item.name}</Table.Td>
             <Table.Td>{item.price}</Table.Td>
         </Table.Tr>

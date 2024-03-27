@@ -1,7 +1,7 @@
 import { BarChart } from "@mantine/charts"
 
 type Props = {
-    data: Subscription[] 
+    data: MonthlySubscription[] 
 }
 
 const SubscriptionsGraph = ({data}: Props) => {
