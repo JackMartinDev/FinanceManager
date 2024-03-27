@@ -24,9 +24,9 @@ const StockModal = (props:{close: () => void, type: "edit" | "add", holding?: Ho
         mutationFn: (stock: {userId: string | undefined; code: string; name:string; buyPrice: string;volume: string;color: string;}) => {
             switch(props.type){
                 case "edit":
-                    return client.patch(`holding/${props.holding?.id}`, stock)
+                    return client.patch(`holdings/${props.holding?.id}`, stock)
                 case "add": 
-                    return client.post(`holding/`, stock)
+                    return client.post(`holdings/`, stock)
             }
         },
         onSuccess: () => {

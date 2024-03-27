@@ -1,4 +1,4 @@
-import { Button, Group, Stack, Title } from "@mantine/core"
+import { Button, Group, Modal, Stack, Title } from "@mantine/core"
 import { DateValue, MonthPickerInput, YearPickerInput } from '@mantine/dates';
 import SubscriptionsGraph from "../components/Subscriptions/Graph/SubscriptionsGraph"
 import SubscriptionList from "../components/Subscriptions/List/SubscriptionsList"
@@ -7,9 +7,12 @@ import { useAuth } from "../context/AuthContext"
 import { client } from "../utils/axios"
 import { useState } from "react"
 import dayjs from "dayjs"
+import { useDisclosure } from "@mantine/hooks";
+import AddSubscriptionModal from "../components/Subscriptions/Modal/AddSubscriptionModal";
 
 const SubscriptionsPage = () => {
     const {user} = useAuth()
+    const [opened, {open,close}] = useDisclosure();
     const [activeMonth, setActiveMonth] = useState(dayjs().format("YYYY-MM"))
     const [activeYear, setActiveYear] = useState(dayjs().format("YYYY"))
 
@@ -63,6 +66,10 @@ const SubscriptionsPage = () => {
 
     return(
         <>
+            <Modal opened={opened} onClose={close} title="Add subscription">
+                <AddSubscriptionModal close={close}/>
+            </Modal>
+
             <Title mb={16}>Subscriptions</Title>
             <Group align="start" justify="space-between" grow gap={200}>
                 <Stack>
@@ -77,6 +84,7 @@ const SubscriptionsPage = () => {
                         <Button onClick={nextMonthHandler} disabled={activeMonth === dayjs().format("YYYY-MM")}>Next</Button>
                     </Group>
                     <SubscriptionList data={activeMonthSubscription}/>
+                    <Button onClick={open}>Add subscription</Button>
                 </Stack>
                 <Stack>
                     <Group>
