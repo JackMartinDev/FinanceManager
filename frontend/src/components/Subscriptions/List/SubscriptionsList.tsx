@@ -1,10 +1,26 @@
 import { Table } from "@mantine/core"
 
 type Props = {
-    data: MonthlySubscription
+    data: MonthlySubscription | undefined
 }
 
 const SubscriptionList = ({data}: Props) => {
+    if(!data) return(
+        <Table w={500}>
+            <Table.Thead>
+                <Table.Tr>
+                    <Table.Th>Service name</Table.Th>
+                    <Table.Th>Price</Table.Th>
+                </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+        <Table.Tr>
+            <Table.Td>No Subscriptions for this month</Table.Td>
+        </Table.Tr>
+            </Table.Tbody>
+        </Table>
+
+    )
     const rows = data.subscriptions.map((item) => (
         <Table.Tr key={item.name}>
             <Table.Td>{item.name}</Table.Td>
@@ -15,7 +31,7 @@ const SubscriptionList = ({data}: Props) => {
     const totalRow = (
         <Table.Tr style={{fontWeight: 500}}>
             <Table.Td>Total</Table.Td>
-            <Table.Td>{data.total}</Table.Td>
+            <Table.Td>{Math.round(data.total * 100)/100}</Table.Td>
         </Table.Tr>
     );
 

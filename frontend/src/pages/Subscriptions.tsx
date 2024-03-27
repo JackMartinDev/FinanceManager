@@ -58,9 +58,7 @@ const SubscriptionsPage = () => {
                         />
                         <Button onClick={nextDateHandler}>Next</Button>
                     </Group>
-                    { activeMonthSubscription &&
                         <SubscriptionList data={activeMonthSubscription}/>
-                    }
                 </Stack>
                 {subscriptionsData &&
                     <SubscriptionsGraph data={subscriptionsData.monthlyList}/>
