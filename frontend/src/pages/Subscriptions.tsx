@@ -1,4 +1,4 @@
-import { Button, Group, Modal, Stack, Title } from "@mantine/core"
+import { Button, Flex, Group, Modal, Stack, Title } from "@mantine/core"
 import { DateValue, MonthPickerInput, YearPickerInput } from '@mantine/dates';
 import SubscriptionsGraph from "../components/Subscriptions/Graph/SubscriptionsGraph"
 import SubscriptionList from "../components/Subscriptions/List/SubscriptionsList"
@@ -71,9 +71,9 @@ const SubscriptionsPage = () => {
             </Modal>
 
             <Title mb={16}>Subscriptions</Title>
-            <Group align="start" justify="space-between" grow gap={200}>
-                <Stack>
-                    <Group>
+            <Flex align="start" justify="space-between" gap={100} mx={25}>
+                <Stack flex={1}>
+                    <Group justify="center">
                         <Button onClick={prevMonthHandler}>Prev</Button>
                         <MonthPickerInput
                             placeholder="Pick date"
@@ -86,8 +86,8 @@ const SubscriptionsPage = () => {
                     <SubscriptionList data={activeMonthSubscription}/>
                     <Button onClick={open}>Add subscription</Button>
                 </Stack>
-                <Stack>
-                    <Group>
+                <Stack flex={2}>
+                    <Group justify="center">
                         <Button onClick={prevYearHandler}>Prev</Button>
                         <YearPickerInput
                             placeholder="Pick date"
@@ -102,7 +102,7 @@ const SubscriptionsPage = () => {
                         <SubscriptionsGraph data={generateGraphData(subscriptionsData.monthlyList, activeYear)}/>
                     }
                 </Stack>
-            </Group>
+            </Flex>
         </>
     )
 }

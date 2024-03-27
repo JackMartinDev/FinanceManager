@@ -34,7 +34,6 @@ const SubscriptionsGraph = ({data}: Props) => {
         <>
             <BarChart
                 h={500}
-                w={700}
                 data={data}
                 dataKey="month"
                 tooltipProps={{
