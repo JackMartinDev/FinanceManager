@@ -15,6 +15,7 @@ export const getSubscriptions = async(_: Request, res: Response) => {
 export const getSubscription = async(req: Request, res: Response) => {
     const {id} = req.params;
     const {result, error} = await Subscription.fetchByUserId(id)
+
     if(error) {
         return res.status(500).json({error: "An error occurred"})
     }
@@ -24,7 +25,7 @@ export const getSubscription = async(req: Request, res: Response) => {
     }
     const groupedResult = groupSubscriptionsService(camelcaseKeys(result))
 
-    return res.status(200).json(result); 
+    return res.status(200).json(groupedResult); 
 };
 
 export const createSubscription = async(req: Request<{}, {}, TSubscription>, res: Response) => {

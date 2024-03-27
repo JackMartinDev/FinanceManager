@@ -1,5 +1,3 @@
-import { UUID } from "crypto"
-
 export type TUser = {
     id: string,
     username: string,
@@ -30,6 +28,17 @@ export type TSubscription = {
     userId: string,
     createdAt?: string,
     updatedAt?: string
+}
+
+export type TMonthlySubscription = {
+    month: string,
+    subscriptions: {name: string, price: number}[],
+    total: number
+}
+
+export type TSubscriptionList = {
+    subscriptions: TSubscription[],
+    monthlyList: TMonthlySubscription[]
 }
 
 

@@ -1,4 +1,4 @@
-import { TSubscription } from "../utils/types";
+import { TMonthlySubscription, TSubscription, TSubscriptionList } from "../utils/types";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
@@ -8,16 +8,12 @@ dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 
 
-type Subscription = {
-    month: string,
-    subscriptions: {name: string, price: number}[],
-    total: number
-}
 
-export const groupSubscriptionsService = (subscriptions: TSubscription[]): Subscription[] => {
+export const groupSubscriptionsService = (subscriptions: TSubscription[]): TSubscriptionList => {
     if (subscriptions.length === 0) {
-        return [];
+        return {subscriptions: [], monthlyList: []};
     }
+
     let earliestDate = dayjs(subscriptions[0].startDate);
 
     subscriptions.forEach(item => {
@@ -26,9 +22,9 @@ export const groupSubscriptionsService = (subscriptions: TSubscription[]): Subsc
         };
     })
 
-    let todaysDate = dayjs()
-    let monthlyResult: Subscription[] = [];
-    let currentDate = earliestDate.startOf('month')
+    let todaysDate = dayjs();
+    let monthlyList: TMonthlySubscription[] = [];
+    let currentDate = earliestDate.startOf('month'); //Date iterator
 
     while (currentDate.isSameOrBefore(todaysDate, 'month')) {
         const monthSubscriptions = subscriptions.filter(sub => {
@@ -39,7 +35,7 @@ export const groupSubscriptionsService = (subscriptions: TSubscription[]): Subsc
 
         const total = monthSubscriptions.reduce((sum, {price}) => sum + price, 0);
 
-        monthlyResult.push({
+        monthlyList.push({
             month: currentDate.format("YYYY-MM"),
             subscriptions: monthSubscriptions.map(({name, price}) => ({name, price})),
             total
@@ -48,5 +44,5 @@ export const groupSubscriptionsService = (subscriptions: TSubscription[]): Subsc
         currentDate = currentDate.add(1, 'month')
     }
 
-   return monthlyResult 
+   return {subscriptions, monthlyList} 
 }
