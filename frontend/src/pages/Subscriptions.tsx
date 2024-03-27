@@ -51,7 +51,6 @@ const SubscriptionsPage = () => {
         setActiveYear(nextYear.format("YYYY"))
     }
 
-
     const changeMonthHandler = (date: DateValue) => {
         setActiveMonth(dayjs(date).format("YYYY-MM"))
     }
@@ -59,6 +58,21 @@ const SubscriptionsPage = () => {
     const changeYearHandler = (date: DateValue) => {
         setActiveYear(dayjs(date).format("YYYY"))
     }
+
+
+    const prepareGraphData = (data: MonthlySubscription[], year: string):MonthlySubscription[] => {
+        return Array.from({ length: 12}, (_, i) => {
+            // Create a dayjs date for each month of the given year
+            const monthDate = dayjs(`${year}-01-01`).add(i, 'month');
+            // Format the month to match your MonthlySubscription month format
+            const formattedMonth = monthDate.format('YYYY-MM');
+            // Check if there's existing data for this month
+            const existingData = data.find(d => d.month === formattedMonth);
+            // Return existing data or create a default object if none found
+            return existingData || { month: formattedMonth, subscriptions: [], total: 0 };
+
+        });
+    };
 
     return(
         <>
@@ -90,7 +104,7 @@ const SubscriptionsPage = () => {
                     </Group>
 
                     {subscriptionsData &&
-                        <SubscriptionsGraph data={subscriptionsData.monthlyList}/>
+                        <SubscriptionsGraph data={prepareGraphData(subscriptionsData.monthlyList, activeYear)}/>
                     }
                 </Stack>
             </Group>
