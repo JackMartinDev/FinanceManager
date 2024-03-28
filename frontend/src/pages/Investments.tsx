@@ -41,7 +41,7 @@ const InvestmentsPage = () => {
             </Modal>
 
             <Title mb={16}>Investments</Title>
-            <Box mx={50}>
+            <Box mx={16}>
                 <Grid mb={50}>
                     <Grid.Col span={2}>
                         {holdingsData && <StockChart data={holdingsData}/>}
