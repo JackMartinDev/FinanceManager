@@ -66,7 +66,7 @@ const AddSubscriptionModal = (props:{close: () => void}) => {
 
     return (
         <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-            <Group align="end" mb="md" grow>
+            <Group mb="md" grow gap={50}>
                 <TextInput
                     label="Name"
                     placeholder="Enter Subscription"
@@ -85,7 +85,7 @@ const AddSubscriptionModal = (props:{close: () => void}) => {
                 />
 
             </Group>
-            <Group align="end" mb="md" grow>
+            <Group mb="md" grow gap={50}>
                 <MonthPickerInput
                     placeholder="Pick date"
                     label="Starting month"
