@@ -66,7 +66,7 @@ const SubscriptionsPage = () => {
 
     return(
         <>
-            <Modal opened={opened} onClose={close} title="Add subscription">
+            <Modal opened={opened} onClose={close} title="Add subscription" centered size="md">
                 <AddSubscriptionModal close={close}/>
             </Modal>
 

@@ -66,10 +66,11 @@ const AddSubscriptionModal = (props:{close: () => void}) => {
 
     return (
         <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-            <Group justify="space-between" align="end" mb="md">
+            <Group align="end" mb="md" grow>
                 <TextInput
                     label="Name"
                     placeholder="Enter Subscription"
+                    w="50%"
                     {...form.getInputProps('name')}
                 />
                 <NumberInput 
@@ -79,11 +80,12 @@ const AddSubscriptionModal = (props:{close: () => void}) => {
                     flex={1} 
                     label="Monthly fee" 
                     leftSection={icon}
+                    w="50%"
                     {...form.getInputProps('price')}
                 />
 
             </Group>
-            <Group grow mb="md">
+            <Group align="end" mb="md" grow>
                 <MonthPickerInput
                     placeholder="Pick date"
                     label="Starting month"

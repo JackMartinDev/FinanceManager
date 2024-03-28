@@ -17,13 +17,13 @@ const StockTable = ({data}: Props) => {
     const queryClient = useQueryClient();
 
     const totalValue = data.reduce((acc, { holding, stockData }) => {
-        const lastClose = stockData[data.length - 1].close;
+        const lastClose = stockData[stockData.length - 1].close;
         return acc + (lastClose * holding.volume);
     }, 0);
 
     const deleteMutation = useMutation({
         mutationFn: (id:string | undefined) => {
-            return client.delete(`/holding/${id}`)
+            return client.delete(`/holdings/${id}`)
         },
         onSuccess: () => {queryClient.invalidateQueries({queryKey: ["holdings"]})}
     })
