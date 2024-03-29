@@ -16,13 +16,21 @@ const SubscriptionsPage = () => {
     const [activeMonth, setActiveMonth] = useState(dayjs().format("YYYY-MM"))
     const [activeYear, setActiveYear] = useState(dayjs().format("YYYY"))
 
-    const {data: subscriptionsData} = useQuery<SubscriptionList>({
+    const {data: subscriptionsData, isPending, isError, error} = useQuery<SubscriptionList>({
         queryKey: ['subscriptions', user?.id],
         queryFn: () => client.get(`subscriptions/${user?.id}`).then((res) => res.data),
     });
+
+    if (isPending) return null
+
+    //Figure out some error thing. Maybe use ErrorBoundry
+    if (isError){
+        return <div>Error: {error.message}</div>
+    }
+
     console.log(activeMonth)
 
-    const activeMonthSubscription = subscriptionsData?.monthlyList.find(
+    const activeMonthSubscription = subscriptionsData.monthlyList.find(
         (sub) => sub.month === activeMonth
     );
 
@@ -98,9 +106,7 @@ const SubscriptionsPage = () => {
                         <Button onClick={nextYearHandler} disabled={activeYear === dayjs().format("YYYY")}>Next</Button>
                     </Group>
 
-                    {subscriptionsData &&
-                        <SubscriptionsGraph data={generateGraphData(subscriptionsData.monthlyList, activeYear)}/>
-                    }
+                    <SubscriptionsGraph data={generateGraphData(subscriptionsData.monthlyList, activeYear)}/>
                 </Stack>
             </Flex>
         </>

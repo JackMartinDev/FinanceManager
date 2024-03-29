@@ -13,14 +13,13 @@ const InvestmentsPage = () => {
     const {user} = useAuth();
     const [opened, { open, close }] = useDisclosure(false);
 
-    const { data: holdingsData, isLoading } = useQuery<StockData[]>({
+    const { data: holdingsData, isSuccess, isPending, isError, error } = useQuery<StockData[]>({
         queryKey: ['holdings', user?.id], 
         queryFn: () => client.get(`holdings/${user?.id}`).then((res) => res.data),
     });
-    console.log(holdingsData);
 
     //TODO: Find a work around for the inital loading display when no user holdings
-    if( holdingsData?.length === 0 && !isLoading) {
+    if( isSuccess && holdingsData.length === 0) {
         return (
             <Center>
                 <Modal opened={opened} onClose={close} title="Add stock" centered>
@@ -34,6 +33,14 @@ const InvestmentsPage = () => {
         )
     }
 
+    if (isPending) return null
+
+    //Figure out some error thing. Maybe use ErrorBoundry
+    if (isError){
+        return<div>Error: {error.message}</div>
+    }
+
+
     return(     
         <>
             <Modal opened={opened} onClose={close} title="Add stock" centered>
@@ -44,11 +51,11 @@ const InvestmentsPage = () => {
             <Box mx={16}>
                 <Grid mb={50}>
                     <Grid.Col span={2}>
-                        {holdingsData && <StockChart data={holdingsData}/>}
+                        <StockChart data={holdingsData}/>
                     </Grid.Col>
                     <Grid.Col span={10}>
                         <Group justify="right">
-                            {holdingsData && <StockTable data={holdingsData}/>}
+                            <StockTable data={holdingsData}/>
                             <Button onClick={open} justify="right">Add stock</Button>
                         </Group>
                     </Grid.Col>
@@ -60,7 +67,7 @@ const InvestmentsPage = () => {
                     direction="row"
                     wrap="wrap"
                 >
-                    {holdingsData && holdingsData.map(data => (
+                    {holdingsData.map(data => (
                         <StockGraph key={data.holding.code} data={data}/>
                     ))}
                 </Flex>
