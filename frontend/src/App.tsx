@@ -12,7 +12,6 @@ import InvestmentsPage from "./pages/Investments"
 import SettingsPage from "./pages/Settings"
 import HomePage from "./pages/Home"
 import CalendarPage from "./pages/Calendar"
-import ProfilePage from "./pages/Profile"
 
 import {
   QueryClient,
@@ -34,7 +33,6 @@ function App() {
                 {"path": "/investments", element: <InvestmentsPage/>},
                 {"path": "/subscriptions", element: <SubscriptionsPage/>},
                 {"path": "/calendar", element: <CalendarPage/>},
-                {"path": "/profile", element: <ProfilePage/>},
                 {"path": "/settings", element: <SettingsPage/>},
             ]}
         ]}

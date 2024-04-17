@@ -39,7 +39,6 @@ const mockdata = [
     { icon: IconDeviceDesktopAnalytics, label: 'Investments', to: '/investments' },
     { icon: IconCreditCard, label: 'Subscriptions', to: '/subscriptions' },
     { icon: IconCalendarStats, label: 'Calendar', to: '/calendar' },
-    { icon: IconUser, label: 'Profile', to: '/profile' },
     { icon: IconSettings, label: 'Settings', to: '/settings' },
 ];
 
